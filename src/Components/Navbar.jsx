@@ -13,6 +13,7 @@ const Navbar = () => {
         { name: 'Home', path: '/' },
         { name: 'Hotels', path: '/rooms' },
         { name: 'Experience', path: '/' },
+        { name: 'Admin', path: '/owner' },
         { name: 'About', path: '/' },
         <button  className="bg-black text-white px-8 py-2.5 rounded-full ml-4 transition-all duration-500">
         Login
