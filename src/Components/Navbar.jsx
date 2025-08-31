@@ -42,6 +42,8 @@ const Navbar = () => {
         return () => window.removeEventListener("scroll", handleScroll);
     }, [location.pathname]);
 
+
+
     return (
        
            

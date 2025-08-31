@@ -18,7 +18,7 @@ function App() {
   
 const IsOwner= useLocation().pathname.includes("owner")
   return (
-  <div>
+  <div >
    {!IsOwner && < Navbar />} 
    { false&&< HotelReg/>}
    <div className='min-h-[70vh]'>
