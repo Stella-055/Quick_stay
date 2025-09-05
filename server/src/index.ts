@@ -9,8 +9,7 @@ app .use (cors(
     {origin:["http://localhost:3000","https://qshotel.netlify.app/"],
         credentials: true,
     }
-
-  ))
+))
 app.get("/", (req:Request,res:Response)=>{
     res.send("welcome to quick stay")
 })
