@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import { dbConnect } from "./utils/db.js";
 import { clerkMiddleware } from "@clerk/express";
+import clerkRoute from "./routes/clerkRoute.js";
 dbConnect();
 const app = express();
 app.use(clerkMiddleware());
@@ -13,6 +14,7 @@ app.use(
     credentials: true,
   }),
 );
+app.use("/api", clerkRoute);
 app.get("/", (req: Request, res: Response) => {
   res.send("welcome to quick stay");
 });

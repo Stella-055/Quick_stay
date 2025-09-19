@@ -2,7 +2,7 @@ import webhook from "svix";
 import User from "../models/User.js";
 import type { Request, Response } from "express";
 
-const clerkwebhook = async (req: Request, res: Response) => {
+ export const clerkwebhook = async (req: Request, res: Response) => {
   const wh = new webhook.Webhook(process.env.CLERK_WEBHOOK_SECRET!);
   try {
     const headers = {
@@ -40,3 +40,4 @@ const clerkwebhook = async (req: Request, res: Response) => {
     res.status(500).json({ message: "internal server error" });
   }
 };
+
