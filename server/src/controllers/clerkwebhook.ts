@@ -1,5 +1,5 @@
 import webhook from "svix";
-import User from "../models/User.js";
+import User from "../models/User";
 import type { Request, Response } from "express";
 
  export const clerkwebhook = async (req: Request, res: Response) => {

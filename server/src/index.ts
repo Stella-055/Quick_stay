@@ -1,9 +1,11 @@
+import "dotenv/config"; 
 import type { Request, Response } from "express";
 import express from "express";
 import cors from "cors";
-import { dbConnect } from "./utils/db.js";
+import { dbConnect } from "./utils/db";
+
 import { clerkMiddleware } from "@clerk/express";
-import clerkRoute from "./routes/clerkRoute.js";
+import clerkRoute from "./routes/clerkRoute";
 dbConnect();
 const app = express();
 app.use(clerkMiddleware());
