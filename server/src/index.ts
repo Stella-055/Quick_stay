@@ -2,6 +2,7 @@ import "dotenv/config";
 import type { Request, Response } from "express";
 import express from "express";
 import cors from "cors";
+import userRoute from "./routes/userRoute";
 import { dbConnect } from "./utils/db";
 
 import { clerkMiddleware } from "@clerk/express";
@@ -16,7 +17,8 @@ app.use(
     credentials: true,
   }),
 );
-app.use("/api", clerkRoute);
+app.use("/api/clerk", clerkRoute);
+app.use("/api/user", userRoute);
 app.get("/", (req: Request, res: Response) => {
   res.send("welcome to quick stay");
 });

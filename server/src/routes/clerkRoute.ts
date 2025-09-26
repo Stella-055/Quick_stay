@@ -2,6 +2,6 @@ import { Router } from "express";
 import { clerkwebhook } from "../controllers/clerkwebhook";
 const clerkRoute = Router()
 
-clerkRoute.post("/clerk", clerkwebhook)
+clerkRoute.post("/", clerkwebhook)
 
 export default clerkRoute
