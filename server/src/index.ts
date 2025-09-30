@@ -7,6 +7,7 @@ import { dbConnect } from "./utils/db";
 
 import { clerkMiddleware } from "@clerk/express";
 import clerkRoute from "./routes/clerkRoute";
+import hotelRoute from "./routes/hotelRoute";
 dbConnect();
 const app = express();
 app.use(clerkMiddleware());
@@ -19,6 +20,7 @@ app.use(
 );
 app.use("/api/clerk", clerkRoute);
 app.use("/api/user", userRoute);
+app.use("/api/hotels", hotelRoute)
 app.get("/", (req: Request, res: Response) => {
   res.send("welcome to quick stay");
 });
