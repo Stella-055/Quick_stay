@@ -53,3 +53,39 @@ export const getOwnerRooms = async(req: Request,res:Response)=>     {
         res.status(500).json({ message: "internal server error" }); 
     }
 }
+
+export const toggleRoomAvailability = async(req: Request,res:Response)=>{
+    interface User {
+        _id: string;
+        image: string;
+      }
+      
+      interface Hotel {
+        _id: string;
+        owner: User; // after populate
+      }
+      
+      interface Room {
+        _id: string;
+        hotel: Hotel;
+      }
+    try {
+        const {roomId}= req.params
+        const {userId}= req.body
+     
+        const room = await Room.findById(roomId)
+        .populate<{ hotel: Hotel }>({path:"hotel",populate:{path:"owner",select:"_id"}}) ;
+        if(!room){
+            return res.status(400).json({message:"room does not exists"})
+        }
+        if(room!.hotel!.owner!._id.toString() !== userId){
+            return res.status(401).json({message:"unauthorized"})
+        }
+        room.isAvailable = !room.isAvailable
+        await room.save()
+        res.status(200).json({message:"room availability updated",room})
+        
+    } catch (error) {
+        res.status(500).json({ message: "internal server error" });
+    }
+}
