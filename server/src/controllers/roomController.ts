@@ -43,3 +43,13 @@ export const getAllRooms = async(req: Request,res:Response)=>{
         res.status(500).json({ message: "internal server error" });
     }
 }
+
+export const getOwnerRooms = async(req: Request,res:Response)=>     {
+    try {
+        const hotelData = await Hotel.findOne({owner:req.body.userId})
+        const rooms = await Room.find({hotel:hotelData?._id.toString()}).populate("hotel")
+        res.status(200).json({message:"all rooms",rooms})
+    } catch (error) {
+        res.status(500).json({ message: "internal server error" }); 
+    }
+}
