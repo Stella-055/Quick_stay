@@ -4,11 +4,13 @@ import express from "express";
 import cors from "cors";
 import userRoute from "./routes/userRoute";
 import { dbConnect } from "./utils/db";
-
+import {cloudinaryConfig} from "./utils/cloudinary";
 import { clerkMiddleware } from "@clerk/express";
 import clerkRoute from "./routes/clerkRoute";
 import hotelRoute from "./routes/hotelRoute";
+import roomRoute from "./routes/roomRoute";
 dbConnect();
+cloudinaryConfig();
 const app = express();
 app.use(clerkMiddleware());
 app.use(express.json());
@@ -21,6 +23,7 @@ app.use(
 app.use("/api/clerk", clerkRoute);
 app.use("/api/user", userRoute);
 app.use("/api/hotels", hotelRoute)
+app.use("/api/rooms", roomRoute)
 app.get("/", (req: Request, res: Response) => {
   res.send("welcome to quick stay");
 });
