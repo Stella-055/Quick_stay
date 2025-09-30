@@ -33,3 +33,13 @@ export const createRoom = async(req: Request,res:Response)=>{
     }
 
 }
+
+export const getAllRooms = async(req: Request,res:Response)=>{
+    try {
+        const rooms = await Room.find({isAvailable:true}).populate({path:"hotel",populate:{path:"owner",select:"image"}})
+        res.status(200).json({message:"all rooms",rooms})
+        
+    } catch (error) {
+        res.status(500).json({ message: "internal server error" });
+    }
+}
