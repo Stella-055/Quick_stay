@@ -9,6 +9,7 @@ import { clerkMiddleware } from "@clerk/express";
 import clerkRoute from "./routes/clerkRoute";
 import hotelRoute from "./routes/hotelRoute";
 import roomRoute from "./routes/roomRoute";
+import bookingRoute from "./routes/bookingRoute";
 dbConnect();
 cloudinaryConfig();
 const app = express();
@@ -24,6 +25,7 @@ app.use("/api/clerk", clerkRoute);
 app.use("/api/user", userRoute);
 app.use("/api/hotels", hotelRoute)
 app.use("/api/rooms", roomRoute)
+app.use("api/bookings",bookingRoute)
 app.get("/", (req: Request, res: Response) => {
   res.send("welcome to quick stay");
 });

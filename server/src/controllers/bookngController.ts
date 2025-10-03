@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import Booking from "../models/Booking";
 
-
+import Hotel from "../models/Hotel";
 
 const checkAvailability= async (roomId: string, checkInDate: Date, checkOutDate: Date) => {
   const overlappingBookings = await Booking.find({
@@ -65,6 +65,36 @@ export const createBooking = async (req: Request, res: Response) => {
     });
     await newBooking.save();
     res.status(201).json({ message: "Booking created successfully", booking: newBooking });
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+export const getUserBookings = async (req: Request, res: Response) => {
+  try {
+    const userId = req.params.userId;
+    const bookings = await Booking.find({ user: userId }).populate('room').populate('hotel');
+    res.status(200).json({ bookings });
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+export const getHotelBookings = async (req: Request, res: Response) => {
+  try {
+    const hotel= await Hotel.findOne({owner:req.body.userId});
+    if(!hotel){
+      return res.status(404).json({ message: "Hotel not found for this owner" });
+    }
+    const bookings = await Booking.find({ hotel: hotel._id }).populate('room').populate('user');
+    const totalBookings= bookings.length;
+   
+    res.status(200).json({ bookings });
+ 
+   const totalRevenue= bookings.reduce((sum, booking) => sum + booking.totalPrice!, 0);
+
+   res.status(200).json({ bookings, totalBookings, totalRevenue });
+   console.log(`Total Bookings: ${totalBookings}, Total Revenue: ${totalRevenue}`);
   } catch (error) {
     res.status(500).json({ message: "Internal server error" });
   }
