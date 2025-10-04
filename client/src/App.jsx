@@ -11,13 +11,19 @@ import Layout from './Pages/HotelOwner/Layout'
 import Dashboard from './Pages/HotelOwner/Dashboard'
 import ListRoom from './Pages/HotelOwner/ListRoom'
 import AddRoom from './Pages/HotelOwner/AddRoom'
+import {
+  QueryClient,
+  QueryClientProvider,
+ 
+} from '@tanstack/react-query'
 
 
 
 function App() {
-  
+  const queryClient = new QueryClient()
 const IsOwner= useLocation().pathname.includes("owner")
   return (
+    <QueryClientProvider client={queryClient}>
   <div >
    {!IsOwner && < Navbar />} 
    { false&&< HotelReg/>}
@@ -35,7 +41,7 @@ const IsOwner= useLocation().pathname.includes("owner")
       </Routes>
    </div>
    <Footer/>
-  </div>
+  </div>  </QueryClientProvider>
   )
 }
 
