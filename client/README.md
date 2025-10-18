@@ -1,13 +1,15 @@
 # QUICK STAY- HOTEL RESERVATION PLATFORM
+
 Quick stay is a web application that allows users to make reservations for hotels.
-User logs in ,inputs date and hotel  details and checks the available the available hotels .
+User logs in ,inputs date and hotel details and checks the available the available hotels .
 On the available ones user checks its details.
 The user can also track her hotel details: the ones ones she has reserved and even check the payment status
 
-The application also has an admin dashboaard that allows one to enter the hotel details and even track 
+The application also has an admin dashboaard that allows one to enter the hotel details and even track
 booked reservations
 
 ## TECHNOLOGIES USED
+
 React,
 clerk,
 Tailwind css
@@ -22,4 +24,5 @@ Currently, two official plugins are available:the ava
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-   ## LIVE DEMO https://qshotel.netlify.app/
+
+## LIVE DEMO https://qshotel.netlify.app/
