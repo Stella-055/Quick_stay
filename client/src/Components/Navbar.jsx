@@ -2,7 +2,8 @@ import React from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { assets } from "../assets/assets";
 import { useClerk, useUser, UserButton } from "@clerk/clerk-react";
-import { isOwner, setshowHotelReg } from "../store/userStore";
+import {useUserDetails }from "../store/userStore";
+
 const BookIcon = () => (
   <svg
     className="w-4 h-4 text-gray-700"
@@ -28,13 +29,13 @@ const Navbar = () => {
     { name: "Home", path: "/" },
     { name: "Hotels", path: "/rooms" },
     { name: "Experience", path: "/" },
-    { name: "Admin", path: "/owner" },
+  
     { name: "About", path: "/" },
     <button className="bg-black text-white px-8 py-2.5 rounded-full ml-4 transition-all duration-500">
       Login
     </button>,
   ];
-
+ const { isOwner, setshowHotelReg }= useUserDetails();
   const [isScrolled, setIsScrolled] = React.useState(false);
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const { openSignIn } = useClerk();

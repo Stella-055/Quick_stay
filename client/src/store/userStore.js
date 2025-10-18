@@ -1,45 +1,35 @@
 import { useAuth, useUser } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
 import { create } from "zustand";
-import { useEffect, useState } from "react";
+import { useEffect} from "react";
 import { persist } from "zustand/middleware";
 import { useMutation } from "@tanstack/react-query";
 import api from "../config/api";
+import axios from "axios";
 
-const userStore = (set) => {
+
+const useUserDetailsStore = create(
+  persist(
+    (set) => ({
+      isOwner: false,
+      showHotelReg: false,
+      searchedCities: [],
+      formError: "",
+      setisOwner: (val) => set({ isOwner: val }),
+      setshowHotelReg: (val) => set({ showHotelReg: val }),
+      setsearchedCities: (val) => set({ searchedCities: val }),
+      setFormError: (val) => set({ formError: val }),
+    }),
+    { name: "user-state" }
+  )
+);
+
+
+export function useUserDetails() {
   const { user } = useUser();
   const { getToken } = useAuth();
-
   const navigate = useNavigate();
-  const [isOwner, setisOwner] = useState(false);
-  const [showHotelReg, setshowHotelReg] = useState(false);
-  const [searchedCities, setsearchedCities] = useState([]);
-  const [formError, setFormError] = useState("");
-  const { mutate } = useMutation({
-    queryKey: ["get-user-data"],
-    queryFn: async (userId) => {
-      const response = await api.get("/api/user", userId, {
-        headers: { Authorization: `Bearer ${await getToken()}` },
-      });
-      return response.data;
-    },
-    onError: (error) => {
-      if (axios.isAxiosError(error)) {
-        setFormError(error.response?.data.message);
-        return;
-      } else {
-        setFormError("something went wrong");
-        return;
-      }
-    },
-    onSuccess: (data) => {
-      setisOwner(data.role === "hotelOwner");
-      setsearchedCities(data.recentSearchedCities);
-    },
-  });
-
-  useEffect(() => mutate({ userId: user.id }), [user]);
-  return {
+  const {
     isOwner,
     setisOwner,
     showHotelReg,
@@ -48,9 +38,40 @@ const userStore = (set) => {
     setsearchedCities,
     formError,
     setFormError,
+  } = useUserDetailsStore();
+
+  const { mutate } = useMutation({
+    mutationFn: async ({ userId }) => {
+      const token = await getToken();
+      const response = await api.get(`/api/user/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return response.data;
+    },
+    onError: (error) => {
+      if (axios.isAxiosError(error)) {
+        setFormError(error.response?.data.message || "Error fetching user");
+      } else {
+        setFormError("Something went wrong");
+      }
+    },
+    onSuccess: (data) => {
+      setisOwner(data.role === "hotelOwner");
+      setsearchedCities(data.recentSearchedCities || []);
+    },
+  });
+
+  useEffect(() => {
+    if (user?.id) mutate({ userId: user.id });
+  }, [user]);
+
+  return {
+    isOwner,
+    showHotelReg,
+    searchedCities,
+    formError,
+    setshowHotelReg,
+    setFormError,
+    navigate,
   };
-};
-
-const useUser = create(persist(userStore, { name: "user-state" }));
-
-export default useUser;
+}

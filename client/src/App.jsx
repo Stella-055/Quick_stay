@@ -11,15 +11,16 @@ import Layout from "./Pages/HotelOwner/Layout";
 import Dashboard from "./Pages/HotelOwner/Dashboard";
 import ListRoom from "./Pages/HotelOwner/ListRoom";
 import AddRoom from "./Pages/HotelOwner/AddRoom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-import { showHotelReg } from "./store/userStore";
+
+import {useUserDetails} from "./store/userStore";
 
 function App() {
-  const queryClient = new QueryClient();
+
+  const { showHotelReg } = useUserDetails();
   const IsOwner = useLocation().pathname.includes("owner");
   return (
-    <QueryClientProvider client={queryClient}>
+  
       <div>
         {!IsOwner && <Navbar />}
         {showHotelReg && <HotelReg />}
@@ -37,8 +38,8 @@ function App() {
           </Routes>
         </div>
         <Footer />
-      </div>{" "}
-    </QueryClientProvider>
+      </div>
+  
   );
 }
 
