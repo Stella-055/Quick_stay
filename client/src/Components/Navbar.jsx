@@ -2,6 +2,7 @@ import React from 'react'
 import { Link , useNavigate,useLocation}from 'react-router-dom'                 
 import {assets} from "../assets/assets"
 import { useClerk,useUser,UserButton } from '@clerk/clerk-react';
+import {isOwner ,setshowHotelReg} from '../store/userStore';
 const BookIcon= () => (
     <svg className="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" >
     <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 19V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v13H7a2 2 0 0 0-2 2Zm0 0a2 2 0 0 0 2 2h12M9 3v14m7 0v4" />
@@ -63,10 +64,14 @@ const Navbar = () => {
                             <div className={`${isScrolled ? "bg-gray-700" : "bg-white"} h-0.5 w-0 group-hover:w-full transition-all duration-300`} />
                         </a>
                     ))}
-                    {user &&
-                    <button className={`border px-4 py-1 text-sm font-light rounded-full cursor-pointer ${isScrolled ? 'text-black' : 'text-white'} transition-all`} onClick={()=>navigate("/owner")}>
-                        Dashboard
-                    </button>}
+                    {user && (
+                       isOwner? <button className={`border px-4 py-1 text-sm font-light rounded-full cursor-pointer ${isScrolled ? 'text-black' : 'text-white'} transition-all`} onClick={()=>navigate("/owner")}>
+                       Dashboard
+                   </button>:<button className={`border px-4 py-1 text-sm font-light rounded-full cursor-pointer ${isScrolled ? 'text-black' : 'text-white'} transition-all`} onClick={()=>setshowHotelReg(true)}>
+                       Register Hotel
+                    </button>
+                    )
+                    }
                 </div>
 
                 {/* Desktop Right */}
@@ -110,9 +115,14 @@ const Navbar = () => {
                         </a>
                     ))}
 
-      { user  &&  <button className="border px-4 py-1 text-sm font-light rounded-full cursor-pointer transition-all" onClick={()=>navigate("/owner")}>
-                        Dashboard
-                    </button>  }
+{user && (
+                       isOwner? <button className={`border px-4 py-1 text-sm font-light rounded-full cursor-pointer ${isScrolled ? 'text-black' : 'text-white'} transition-all`} onClick={()=>navigate("/owner")}>
+                       Dashboard
+                   </button>:<button className={`border px-4 py-1 text-sm font-light rounded-full cursor-pointer ${isScrolled ? 'text-black' : 'text-white'} transition-all`} onClick={()=>setshowHotelReg(true)}>
+                       Register Hotel
+                    </button>
+                    )
+                    }
 
    {!user &&       <button  onClick={openSignIn} className="bg-black text-white px-8 py-2.5 rounded-full transition-all duration-500">
                         Login

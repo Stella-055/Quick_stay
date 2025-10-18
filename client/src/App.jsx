@@ -19,6 +19,8 @@ import {
 
 
 
+import{showHotelReg,} from './store/userStore'
+
 function App() {
   const queryClient = new QueryClient()
 const IsOwner= useLocation().pathname.includes("owner")
@@ -26,7 +28,7 @@ const IsOwner= useLocation().pathname.includes("owner")
     <QueryClientProvider client={queryClient}>
   <div >
    {!IsOwner && < Navbar />} 
-   { false&&< HotelReg/>}
+   { showHotelReg&&< HotelReg/>}
    <div className='min-h-[70vh]'>
     <Routes>
         <Route path='/' element={<Home/>} />
