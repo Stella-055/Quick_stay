@@ -1,12 +1,11 @@
 import { useAuth, useUser } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
 import { create } from "zustand";
-import { useEffect} from "react";
+import { useEffect } from "react";
 import { persist } from "zustand/middleware";
 import { useMutation } from "@tanstack/react-query";
 import api from "../config/api";
 import axios from "axios";
-
 
 const useUserDetailsStore = create(
   persist(
@@ -20,10 +19,9 @@ const useUserDetailsStore = create(
       setsearchedCities: (val) => set({ searchedCities: val }),
       setFormError: (val) => set({ formError: val }),
     }),
-    { name: "user-state" }
-  )
+    { name: "user-state" },
+  ),
 );
-
 
 export function useUserDetails() {
   const { user } = useUser();

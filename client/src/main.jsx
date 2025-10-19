@@ -14,9 +14,10 @@ if (!PUBLISHABLE_KEY) {
 const queryClient = new QueryClient();
 createRoot(document.getElementById("root")).render(
   <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
-      <QueryClientProvider client={queryClient}>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter> </QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>{" "}
+    </QueryClientProvider>
   </ClerkProvider>,
 );
