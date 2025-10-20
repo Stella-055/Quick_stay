@@ -42,9 +42,13 @@ const HotelReg = () => {
         transition: Bounce,});
     },
   });
+  const handleSubmit=(e)=>{
+    e.preventDefault();
+    mutate({hotel:hotelDetails});
+  }
   return (
     <div className="fixed top-0 bottom-0 left-0 right-0 z-100 flex items-center justify-center bg-black/70">
-      <form className="flex bg-white rounded-xl max-w-4xl max-md:mx-2">
+      <form  className="flex bg-white rounded-xl max-w-4xl max-md:mx-2">
         <img
           src={assets.regImage}
           alt=""
@@ -120,7 +124,7 @@ const HotelReg = () => {
               ))}
             </select>
           </div>
-          <button className="bg-indigo-500 hover:bg-indigo-600 transition-all text-white mr-auto px-6 py-2 rounded cursor-pointer mt-6">
+          <button onClick={handleSubmit} className="bg-indigo-500 hover:bg-indigo-600 transition-all text-white mr-auto px-6 py-2 rounded cursor-pointer mt-6">
             Register
           </button>
           <ToastContainer />
