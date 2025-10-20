@@ -1,8 +1,47 @@
 import React from "react";
 import { assets, cities } from "../assets/assets";
 import { useUserDetails } from "../store/userStore";
+import { useMutation } from "@tanstack/react-query";
+import api from "../config/api";
+import { useUser } from "@clerk/clerk-react";
+import { ToastContainer, toast } from 'react-toastify';
+  
 const HotelReg = () => {
   const { setshowHotelReg } = useUserDetails();
+  const {user}=useUser();
+  const[hotelDetails,setHotelDetails]=React.useState({
+   
+    name:"",
+    contact:"",
+    address:"",
+    city:"",
+    userId: user.id
+  });
+  const { mutate, isPending} = useMutation({
+    mutationFn: async ({ hotel }) => {
+   
+      const response = await api.get(`/hotels`,hotel );
+      return response.data;
+    },
+    onError: (error) => {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data.message || "Error fetching user");
+      } else {
+        toast.error("Something went wrong");
+      }
+    },
+    onSuccess: () => {
+      toast.success("Hotel Registered Successfully",{position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,});
+    },
+  });
   return (
     <div className="fixed top-0 bottom-0 left-0 right-0 z-100 flex items-center justify-center bg-black/70">
       <form className="flex bg-white rounded-xl max-w-4xl max-md:mx-2">
@@ -29,6 +68,7 @@ const HotelReg = () => {
               type="text"
               id="name"
               placeholder="Type here"
+              onChange={(e)=>setHotelDetails({...hotelDetails,name:e.target.value})}
               className="border border-gray-200 rounded w-full px-3 py-2.5 mt-1 outline-indigo-500 font-light"
               required
             />
@@ -41,6 +81,7 @@ const HotelReg = () => {
             <input
               type="text"
               id="contact"
+              onChange={(e)=>setHotelDetails({...hotelDetails,contact:e.target.value})}
               placeholder="Type here"
               className="border border-gray-200 rounded w-full px-3 py-2.5 mt-1 outline-indigo-500 font-light"
               required
@@ -54,6 +95,7 @@ const HotelReg = () => {
             <input
               type="text"
               id="address"
+              onChange={(e)=>setHotelDetails({...hotelDetails,address:e.target.value})}
               placeholder="Type here"
               className="border border-gray-200 rounded w-full px-3 py-2.5 mt-1 outline-indigo-500 font-light"
               required
@@ -71,7 +113,8 @@ const HotelReg = () => {
             >
               <option value="">Select City</option>
               {cities.map((city) => (
-                <option key={city} value={city}>
+                <option key={city} value={city}
+                 onChange={(e)=>setHotelDetails({...hotelDetails,city:e.target.value})}>
                   {city}
                 </option>
               ))}
@@ -80,6 +123,7 @@ const HotelReg = () => {
           <button className="bg-indigo-500 hover:bg-indigo-600 transition-all text-white mr-auto px-6 py-2 rounded cursor-pointer mt-6">
             Register
           </button>
+          <ToastContainer />
         </div>
       </form>
     </div>

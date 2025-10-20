@@ -1,11 +1,11 @@
-import { useAuth, useUser } from "@clerk/clerk-react";
+import {  useUser } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
 import { create } from "zustand";
 import { useEffect } from "react";
 import { persist } from "zustand/middleware";
 import { useMutation } from "@tanstack/react-query";
 import api from "../config/api";
-import axios from "axios";
+
 
 const useUserDetailsStore = create(
   persist(
@@ -25,7 +25,7 @@ const useUserDetailsStore = create(
 
 export function useUserDetails() {
   const { user } = useUser();
-  const { getToken } = useAuth();
+ 
   const navigate = useNavigate();
   const {
     isOwner,
@@ -40,10 +40,8 @@ export function useUserDetails() {
 
   const { mutate } = useMutation({
     mutationFn: async ({ userId }) => {
-      const token = await getToken();
-      const response = await api.get(`/api/user/${userId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+   
+      const response = await api.get(`/user`,userId);
       return response.data;
     },
     onError: (error) => {
