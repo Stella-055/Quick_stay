@@ -66,6 +66,7 @@ export function useUserDetails() {
     showHotelReg,
     searchedCities,
     formError,
+    setisOwner,
     setshowHotelReg,
     setFormError,
     navigate,

@@ -7,7 +7,7 @@ import { useUser } from "@clerk/clerk-react";
 import { ToastContainer, toast } from 'react-toastify';
   
 const HotelReg = () => {
-  const { setshowHotelReg } = useUserDetails();
+  const { setshowHotelReg,setisOwner } = useUserDetails();
   const {user}=useUser();
   const[hotelDetails,setHotelDetails]=React.useState({
    
@@ -40,7 +40,11 @@ const HotelReg = () => {
         progress: undefined,
         theme: "light",
         transition: Bounce,});
+        setshowHotelReg(false)
+    setisOwner(true);
     },
+    
+
   });
   const handleSubmit=(e)=>{
     e.preventDefault();
@@ -127,7 +131,17 @@ const HotelReg = () => {
           <button onClick={handleSubmit} className="bg-indigo-500 hover:bg-indigo-600 transition-all text-white mr-auto px-6 py-2 rounded cursor-pointer mt-6">
             Register
           </button>
-          <ToastContainer />
+          <ToastContainer position="bottom-right"
+autoClose={5000}
+hideProgressBar={false}
+newestOnTop={false}
+closeOnClick={false}
+rtl={false}
+pauseOnFocusLoss
+draggable
+pauseOnHover
+theme="light"
+transition={Bounce} />
         </div>
       </form>
     </div>

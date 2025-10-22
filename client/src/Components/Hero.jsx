@@ -1,9 +1,31 @@
 import React from "react";
 import { assets, cities } from "../assets/assets";
-
+import { ToastContainer, toast } from 'react-toastify';
+import { useUserDetails } from "../store/userStore";
 const Hero = () => {
+  const{formError}= useUserDetails();
+  formError && toast.error(formError ,{position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: false,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+    transition: Bounce,})
   return (
     <div className='flex flex-col items-start justify-center px-6 md:px-16 lg:px-24 xl:px-32 text-white bg-[url("/src/assets/heroImage.png")]  bg-no-repeat bg-cover bg-center h-screen w-full '>
+      <ToastContainer position="bottom-right"
+autoClose={5000}
+hideProgressBar={false}
+newestOnTop={false}
+closeOnClick={false}
+rtl={false}
+pauseOnFocusLoss
+draggable
+pauseOnHover
+theme="light"
+transition={Bounce} />
       <p className="bg-[(#49B9FF)]/50 PX-3.5 py-1 rounded-full mt-20">
         The Ultimate Home Experience
       </p>
