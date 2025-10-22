@@ -1,18 +1,24 @@
-import React from "react";
+import React, {  useEffect } from "react";
 import { assets, cities } from "../assets/assets";
 import { ToastContainer, toast } from 'react-toastify';
 import { useUserDetails } from "../store/userStore";
 const Hero = () => {
   const{formError}= useUserDetails();
-  formError && toast.error(formError ,{position: "top-right",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: false,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "light",
-    transition: Bounce,})
+
+  useEffect(() => {
+    if (formError) {
+      toast.error(formError ,{position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      transition: Bounce,});
+    }
+  }, [formError]);
+
   return (
     <div className='flex flex-col items-start justify-center px-6 md:px-16 lg:px-24 xl:px-32 text-white bg-[url("/src/assets/heroImage.png")]  bg-no-repeat bg-cover bg-center h-screen w-full '>
       <ToastContainer position="bottom-right"
