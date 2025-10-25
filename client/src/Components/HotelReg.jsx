@@ -20,7 +20,7 @@ const HotelReg = () => {
   const { mutate, isPending} = useMutation({
     mutationFn: async ({ hotel }) => {
    
-      const response = await api.get(`/hotels`,hotel );
+      const response = await api.post(`/hotels`,hotel );
       return response.data;
     },
     onError: (error) => {

@@ -13,7 +13,7 @@ const AddRoom = () => {
   const [inputs, setInputs] = useState({
     roomType: "",
     pricePerNight: 0,
-    amenities: {
+    ammenities: {
       "free wifi ": false,
       "free breakfast ": false,
       "Room service ": false,
@@ -21,8 +21,46 @@ const AddRoom = () => {
       "Pool access": false,
     },
   });
+  const { mutate, isPending} = useMutation({
+    mutationFn: async ({ room }) => {
+   
+      const response = await api.post(`/room`,room);
+      return response.data;
+    },
+    onError: (error) => {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data.message || "Error fetching user");
+      } else {
+        toast.error("Something went wrong");
+      }
+    },
+    onSuccess: () => {
+      toast.success("Hotel Registered Successfully",{position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,});
+        setshowHotelReg(false)
+    setisOwner(true);
+    },
+    
+
+  });
+  const handleSubmit=(e)=>{
+    e.preventDefault();
+    if(!inputs.roomType || Object.values(images).some(img => img === null)){
+      toast.error("Please fill all required fields and upload all images");
+      return;
+    }
+    const imageArray  = Object.values(images);
+    mutate({room:inputs, images:imageArray} );
+  }
   return (
-    <form action="">
+    <form action="" onSubmit={handleSubmit}>
       <Title
         align="left "
         font="outfit"
@@ -88,7 +126,7 @@ const AddRoom = () => {
       </div>
       <p className="text-gray-800 mt-4">Amenities</p>
       <div className="flex flex-col flex-wrap mt-1 text-gray-400 max-w-sm">
-        {Object.keys(inputs.amenities).map((amenity, index) => (
+        {Object.keys(inputs.ammenities).map((amenity, index) => (
           <div key={index}>
             <input
               type="checkbox"
@@ -97,9 +135,9 @@ const AddRoom = () => {
               onChange={() =>
                 setInputs({
                   ...inputs,
-                  amenities: {
-                    ...inputs.amenities,
-                    [amenity]: !inputs.amenities[amenity],
+                  ammenities: {
+                    ...inputs.ammenities,
+                    [amenity]: !inputs.ammenities[amenity],
                   },
                 })
               }
