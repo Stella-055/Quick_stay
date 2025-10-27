@@ -2,9 +2,16 @@ import React from "react";
 import { useState } from "react";
 import { roomsDummyData } from "../../assets/assets";
 import Title from "../../Components/Title";
-
+import { useQuery } from "@tanstack/react-query";
+import api from "../../config/api";
 const ListRoom = () => {
   const [rooms, setRooms] = useState(roomsDummyData);
+const { data, isLoading, isError } = useQuery({
+    queryKey: ['rooms'],
+    queryFn: async () => {
+      const response = await api.get('/rooms');
+      return response.data;
+    }});
   return (
     <div>
       <Title

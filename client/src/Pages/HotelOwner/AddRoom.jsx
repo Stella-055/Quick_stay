@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import Title from "../../Components/Title";
 import { assets } from "../../assets/assets";
-
+import { useMutation } from "@tanstack/react-query";
+import { ToastContainer, toast } from 'react-toastify';
+import axios from "axios";
+import { useUser } from "@clerk/clerk-react";
 const AddRoom = () => {
+  const {user}=useUser();
+ 
   const [images, setImages] = useState({
     1: null,
     2: null,
@@ -22,6 +27,7 @@ const AddRoom = () => {
     },
   });
   const { mutate, isPending} = useMutation({
+    mutationKey: ['addRoom'],
     mutationFn: async ({ room }) => {
    
       const response = await api.post(`/room`,room);
@@ -57,9 +63,20 @@ const AddRoom = () => {
       return;
     }
     const imageArray  = Object.values(images);
-    mutate({room:inputs, images:imageArray} );
+    mutate({room:inputs, images:imageArray, userId:user.id} );
   }
-  return (
+  return (<>
+     <ToastContainer position="bottom-right"
+    autoClose={5000}
+    hideProgressBar={false}
+    newestOnTop={false}
+    closeOnClick={false}
+    rtl={false}
+    pauseOnFocusLoss
+    draggable
+    pauseOnHover
+    theme="light"
+    transition={Bounce} />
     <form action="" onSubmit={handleSubmit}>
       <Title
         align="left "
@@ -147,9 +164,10 @@ const AddRoom = () => {
         ))}
       </div>
       <button className="bg-blue-500 text-white px-8 py-2 rounded mt-8 cursor-pointer">
-        Add Room
+      {isPending ? "Adding..." : "Add Room"}
+       
       </button>
-    </form>
+    </form> </>
   );
 };
 

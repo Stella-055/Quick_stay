@@ -5,7 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import api from "../config/api";
 import { useUser } from "@clerk/clerk-react";
 import { ToastContainer, toast } from 'react-toastify';
-  
+  import axios from "axios";
 const HotelReg = () => {
   const { setshowHotelReg,setisOwner } = useUserDetails();
   const {user}=useUser();
@@ -18,6 +18,7 @@ const HotelReg = () => {
     userId: user.id
   });
   const { mutate, isPending} = useMutation({
+    mutationKey: ['registerHotel'],
     mutationFn: async ({ hotel }) => {
    
       const response = await api.post(`/hotels`,hotel );
@@ -129,7 +130,8 @@ const HotelReg = () => {
             </select>
           </div>
           <button onClick={handleSubmit} className="bg-indigo-500 hover:bg-indigo-600 transition-all text-white mr-auto px-6 py-2 rounded cursor-pointer mt-6">
-            Register
+           
+           {isPending?"Registering...":Register} 
           </button>
           <ToastContainer position="bottom-right"
 autoClose={5000}
