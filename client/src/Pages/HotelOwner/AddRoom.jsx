@@ -28,7 +28,7 @@ const AddRoom = () => {
   });
   const { mutate, isPending} = useMutation({
     mutationKey: ['addRoom'],
-    mutationFn: async ({ room }) => {
+    mutationFn: async ( room ) => {
    
       const response = await api.post(`/room`,room);
       return response.data;
@@ -41,7 +41,7 @@ const AddRoom = () => {
       }
     },
     onSuccess: () => {
-      toast.success("Hotel Registered Successfully",{position: "top-right",
+      toast.success("Room Added Successfully",{position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: false,
@@ -50,8 +50,7 @@ const AddRoom = () => {
         progress: undefined,
         theme: "light",
         transition: Bounce,});
-        setshowHotelReg(false)
-    setisOwner(true);
+  
     },
     
 
@@ -63,7 +62,8 @@ const AddRoom = () => {
       return;
     }
     const imageArray  = Object.values(images);
-    mutate({room:inputs, images:imageArray, userId:user.id} );
+    const roomDetails ={room:inputs, images:imageArray, userId:user.id}
+    mutate(roomDetails );
   }
   return (<>
      <ToastContainer position="bottom-right"

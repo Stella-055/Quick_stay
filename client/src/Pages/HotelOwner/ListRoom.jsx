@@ -1,17 +1,62 @@
 import React from "react";
 import { useState } from "react";
-import { roomsDummyData } from "../../assets/assets";
 import Title from "../../Components/Title";
-import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { useMutation } from "@tanstack/react-query";
+import { ToastContainer, toast } from 'react-toastify';
 import api from "../../config/api";
+import { useUser } from "@clerk/clerk-react";
 const ListRoom = () => {
-  const [rooms, setRooms] = useState(roomsDummyData);
-const { data, isLoading, isError } = useQuery({
-    queryKey: ['rooms'],
-    queryFn: async () => {
-      const response = await api.get('/rooms');
+  const [rooms, setRooms] = useState([]);
+  const {user}=useUser();
+  const userDetails={userId:user.id}
+  const getRooms = useMutation({
+    mutationKey: ['listRoom'],
+    mutationFn: async (userDetails) => {
+   
+      const response = await api.post(`/room`,userDetails);
       return response.data;
-    }});
+    },
+    onError: (error) => {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data.message || "Error fetching user");
+      } else {
+        toast.error("Something went wrong");
+      }
+    },
+    onSuccess: (data) => {
+      setRooms(data.rooms);
+    },  });
+  React.useEffect(() => {
+    getRooms.mutate(userDetails);
+  }, [user]);
+  const toggleAvailability = useMutation({
+    mutationKey: ['toggleAvailability'],
+    mutationFn: async ({userId, roomId}) => {
+     const response = await api.patch(`/availability/${roomId}`,{userId});
+      return response.data;
+    },
+    onError: (error) => {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data.message || "Error fetching user");
+      } else {
+        toast.error("Something went wrong");
+      }
+    },
+    onSuccess: () => {
+     toast.success("Updated Successfully",{position: "top-right",
+             autoClose: 5000,
+             hideProgressBar: false,
+             closeOnClick: false,
+             pauseOnHover: true,
+             draggable: true,
+             progress: undefined,
+             theme: "light",
+             transition: Bounce,});
+       
+      getRooms.mutate(userDetails);
+         
+    },  });
   return (
     <div>
       <Title
@@ -55,6 +100,7 @@ const { data, isLoading, isError } = useQuery({
                       type="checkbox"
                       className="sr-only peer"
                       checked={item.isAvailable}
+                      onChange={() => toggleAvailability.mutate({userId:user.id, roomId:item._id})}
                     />
                     <div className="w-12 h-7 bg-slate-300 rounded-full peer peer-checked:bg-blue-600 transition-colors duration-200"></div>
                     <span className=" dot absolute left-1 top-1 w-5 h-5 bg-white rounded-full transition-transform duration-200 ease-in-out peer-checked:translate-x-5"></span>
@@ -65,6 +111,17 @@ const { data, isLoading, isError } = useQuery({
           </tbody>
         </table>
       </div>
+      <ToastContainer position="bottom-right"
+      autoClose={5000}
+      hideProgressBar={false}
+      newestOnTop={false}
+      closeOnClick={false}
+      rtl={false}
+      pauseOnFocusLoss
+      draggable
+      pauseOnHover
+      theme="light"
+      transition={Bounce} />
     </div>
   );
 };
