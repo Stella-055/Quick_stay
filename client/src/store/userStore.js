@@ -25,7 +25,7 @@ const useUserDetailsStore = create(
 
 export function useUserDetails() {
   const { user } = useUser();
- 
+
   const navigate = useNavigate();
   const {
     isOwner,

@@ -1,9 +1,44 @@
 import React, { useState } from "react";
 import Title from "../../Components/Title";
 import { assets, dashboardDummyData } from "../../assets/assets";
-
+import { useMutation } from "@tanstack/react-query";
+import { ToastContainer, toast } from 'react-toastify';
+import axios from "axios";
+import { useUser } from "@clerk/clerk-react";
+import api from "../../config/api";
 const Dashboard = () => {
-  const [dashboarddata, setDashboarddata] = useState(dashboardDummyData);
+  const [dashboarddata, setDashboarddata] = useState({bookings:[],totalBookings:0,totalRevenue:0});
+  const {user}=useUser();
+  const { mutate, isPending} = useMutation({
+    mutationKey: ['dashboardData'],
+    mutationFn: async ( owner ) => {
+   
+      const response = await api.post(`/bookings/owner`,owner);
+      return response.data;
+    },
+    onError: (error) => {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data.message || "Error fetching user");
+      } else {
+        toast.error("Something went wrong");
+      }
+    },
+    onSuccess: (data) => {
+      setDashboarddata(
+        {bookings:data.bookings,
+        totalBookings:data.totalBookings,
+        totalRevenue:data.totalRevenue}
+      )
+  
+    },
+    
+
+  });
+  React.useEffect(() => {
+    if(user?.id){
+      mutate({ ownerId: user.id });
+    }
+  }, [user]);
   return (
     <div>
       <Title
