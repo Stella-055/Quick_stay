@@ -2,8 +2,12 @@ import React, {  useEffect } from "react";
 import { assets, cities } from "../assets/assets";
 import { ToastContainer, toast } from 'react-toastify';
 import { useUserDetails } from "../store/userStore";
+import { useNavigate } from "react-router-dom";
 const Hero = () => {
   const{formError}= useUserDetails();
+  const navigate = useNavigate();
+  const {citysearched, setsearchedCities}= useUserDetails("");
+
 
   useEffect(() => {
     if (formError) {
@@ -18,6 +22,12 @@ const Hero = () => {
       transition: Bounce,});
     }
   }, [formError]);
+  const search = (e) => {
+    e.preventDefault();
+  navigate("/rooms/?city="+citysearched);
+  
+  
+  }
 
   return (
     <div className='flex flex-col items-start justify-center px-6 md:px-16 lg:px-24 xl:px-32 text-white bg-[url("/src/assets/heroImage.png")]  bg-no-repeat bg-cover bg-center h-screen w-full '>
@@ -45,7 +55,7 @@ transition={Bounce} />
         difference.
       </p>
 
-      <form className="bg-white text-gray-500 rounded-lg px-6 py-4  mt-8 flex flex-col md:flex-row max-md:items-start gap-4 max-md:mx-auto">
+      <form onSubmit={search} className="bg-white text-gray-500 rounded-lg px-6 py-4  mt-8 flex flex-col md:flex-row max-md:items-start gap-4 max-md:mx-auto">
         <div>
           <div className="flex items-center gap-2">
             <img src={assets.calenderIcon} alt="calender" className="h-4" />
@@ -57,11 +67,15 @@ transition={Bounce} />
             type="text"
             className=" rounded border border-gray-200 px-3 py-1.5 mt-1.5 text-sm outline-none"
             placeholder="Type here"
+            value={citysearched}
+            onChange={(e)=>{
+              setsearchedCities(e.target.value);
+            }}
             required
           />
           <datalist id="destinations">
             {cities.map((city, index) => (
-              <option key={index} value={city} />
+              <option key={index} value={city}  />
             ))}
           </datalist>
         </div>

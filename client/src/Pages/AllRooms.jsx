@@ -1,6 +1,6 @@
 import React from "react";
 import { roomsDummyData, assets, facilityIcons } from "../assets/assets";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Starrating from "../Components/Starrating";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -34,6 +34,7 @@ const Radiobutton = ({ label, selected = false, onChange = () => {} }) => {
 const AllRooms = () => {
   const navigate = useNavigate();
   const [openFilters, setopenFilters] = useState(false);
+  const {city}=useSearchParams();
   const roomTypes = [
     "Single Room",
     "Double Room",
@@ -62,6 +63,12 @@ const AllRooms = () => {
     return <div>{error.message}|| something went wrong</div>;
   }
   const [rooms, setrooms] = React.useState(data);
+  if(city.get("city")){
+    React.useEffect(()=>{
+      const filteredRoomsByCity = data.filter((room) => room.hotel.city.toLowerCase() === city.get("city").toLowerCase());
+      setrooms(filteredRoomsByCity);
+    },[city]);
+  }
   function filterRoomType (type) {
     const filteredRooms = rooms.filter((room) => room.roomType === type);
     setrooms(filteredRooms);
@@ -95,7 +102,7 @@ const AllRooms = () => {
           </p>
         </div>
 
-        {roomsDummyData.map((room) => (
+        {rooms.map((room) => (
           <div className="flex flex-col md:flex-row items-start py-10 gap-6 border-b  border-gray-300 last:pb-30 last:border-0">
             <img
               src={room.images[0]}
