@@ -3,7 +3,8 @@ import { roomsDummyData, assets, facilityIcons } from "../assets/assets";
 import { useNavigate } from "react-router-dom";
 import Starrating from "../Components/Starrating";
 import { useState } from "react";
-
+import { useQuery } from "@tanstack/react-query";
+import api from "../config/api";
 const Checkbox = ({ label, selected, onChange = () => {} }) => {
   return (
     <label className=" flex gap-3 items-center cursor-pointer mt-2 text-sm">
@@ -46,6 +47,43 @@ const AllRooms = () => {
     "2000 to3000",
   ];
   const sortOptions = ["Price low to high", "high to low", "Newest First"];
+  const { data, isLoading, isError ,error} = useQuery({
+    queryKey: ['featuredDestinations'],
+    queryFn: async () => {
+      const response = await api.get('/rooms');
+      return response.data;
+    },
+  });
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    return <div>{error.message}|| something went wrong</div>;
+  }
+  const [rooms, setrooms] = React.useState(data);
+  function filterRoomType (type) {
+    const filteredRooms = rooms.filter((room) => room.roomType === type);
+    setrooms(filteredRooms);
+  }
+  const filterPriceRange = (range) => {
+    const [min, max] = range.split(" to ").map(Number);
+    const filteredRooms = rooms.filter(
+      (room) => room.pricePerNight >= min && room.pricePerNight <= max
+    );
+    setrooms(filteredRooms);
+  };
+  const sortRooms = (option) => {
+    let sortedRooms = [...rooms];
+    if (option === "Price low to high") {
+      sortedRooms.sort((a, b) => a.pricePerNight - b.pricePerNight);
+    } else if (option === "high to low") {
+      sortedRooms.sort((a, b) => b.pricePerNight - a.pricePerNight);
+    } else if (option === "Newest First") {
+      sortedRooms.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    }
+    setrooms(sortedRooms);
+  };
   return (
     <div className="flex flex-col-reverse lg:flex-row items-start justify-between pt-28 md:pt-35 px=4 md:px-16 lg:px-24">
       <div>
@@ -128,19 +166,19 @@ const AllRooms = () => {
           <div className="px-5 pt-5">
             <p className=" font-medium text-gray-800 pb-2">Popular Filters</p>
             {roomTypes.map((room, index) => (
-              <Checkbox key={index} label={room} />
+              <Checkbox key={index} label={room}  onchange={ ()=>filterRoomType(room)}/>
             ))}
           </div>
           <div className="px-5 pt-5">
             <p className=" font-medium text-gray-800 pb-2">Price Range</p>
             {priceranges.map((range, index) => (
-              <Checkbox key={index} label={`$ ${range}`} />
+              <Checkbox key={index} label={`$ ${range}`}  onChange={()=>filterPriceRange(range)}/>
             ))}
           </div>
           <div className="px-5 pt-5">
             <p className=" font-medium text-gray-800 pb-2">sort By</p>
             {sortOptions.map((option, index) => (
-              <Radiobutton key={index} label={option} />
+              <Radiobutton key={index} label={option}  onChange={()=>sortRooms(option)}/>
             ))}
           </div>
         </div>
