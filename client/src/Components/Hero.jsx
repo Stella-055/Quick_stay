@@ -3,10 +3,15 @@ import { assets, cities } from "../assets/assets";
 import { ToastContainer, toast } from 'react-toastify';
 import { useUserDetails } from "../store/userStore";
 import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import api from "../config/api";
+import axios from "axios";
+import { useUser } from "@clerk/clerk-react";
 const Hero = () => {
-  const{formError}= useUserDetails();
+  const{formError,setsearchedCities}= useUserDetails();
+  const { user } = useUser();
   const navigate = useNavigate();
-  const {citysearched, setsearchedCities}= useUserDetails("");
+  const {citysearched, setCitysearched}= useUserDetails("");
 
 
   useEffect(() => {
@@ -22,9 +27,35 @@ const Hero = () => {
       transition: Bounce,});
     }
   }, [formError]);
+
+  const { mutate } = useMutation({
+    mutationFn: async (details) => {
+   
+      const response = await api.post(`/user/store-recent-search`,details);
+      return response.data;
+    },
+    onError: (error) => {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data.message || "Error fetching user");
+      } else {
+        toast.error("Something went wrong");
+      }
+    },
+    onSuccess: (data) => {
+      setsearchedCities((prevCities)=> {
+        const updatedCities = [ ...prevCities, citysearched];
+        if (updatedCities.length > 3) {
+          updatedCities.shift(); 
+        }
+        return updatedCities;
+      });
+      navigate("/rooms/?city="+citysearched);
+
+    },
+  });
   const search = (e) => {
     e.preventDefault();
-  navigate("/rooms/?city="+citysearched);
+    mutate({ city: citysearched , userId: user?.id });
   
   
   }
@@ -69,7 +100,7 @@ transition={Bounce} />
             placeholder="Type here"
             value={citysearched}
             onChange={(e)=>{
-              setsearchedCities(e.target.value);
+              setCitysearched(e.target.value);
             }}
             required
           />
