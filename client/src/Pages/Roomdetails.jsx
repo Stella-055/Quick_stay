@@ -7,18 +7,37 @@ import {
   facilityIcons,
   roomCommonData,
 } from "../assets/assets";
+import axios from "axios";
+import api from "../config/api";
+import { useQuery } from "@tanstack/react-query";
 import Starrating from "../Components/Starrating";
 
 const Roomdetails = () => {
   const { id } = useParams();
-  const [room, setRoom] = useState(null);
+const [room, setRoom] = useState(null);
   const [mainImage, setMainImage] = useState(null);
+  const { data, isLoading, isError ,error} = useQuery({
+    queryKey: ['featuredDestinations'],
+    queryFn: async () => {
+      const response = await api.get('/rooms');
+      return response.data;
+    },
+  });
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
-  useEffect(() => {
-    const room = roomsDummyData.find((room) => room._id === id);
-    room && setRoom(room);
-    room && setMainImage(room.images[0]);
-  }, []);
+  if (isError) {
+    return <div>{error.message}|| something went wrong</div>;
+  }
+  if (data) {
+    const roomData = data.find((room) => room._id === id);
+    if (roomData && !room) {
+      setRoom(roomData);
+      setMainImage(roomData.images[0]);
+    }
+  }
+ 
   return (
     room && (
       <div className="py-28 md:py-35 px-4 md:px-16 lg:px-24 xl:px-32">
