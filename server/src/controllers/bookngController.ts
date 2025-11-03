@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Booking from "../models/Booking";
-
+import Room from "../models/Room";
 import Hotel from "../models/Hotel";
 
 const checkAvailability= async (roomId: string, checkInDate: Date, checkOutDate: Date) => {
@@ -36,8 +36,8 @@ export const checkAvailabilityApi = async (req: Request, res: Response) => {
 
 export const createBooking = async (req: Request, res: Response) => {
   try {
-    const { userId, roomId, hotelId, checkInDate, checkOutDate, totalPrice, numberOfGuests } = req.body;
-    if (!userId || !roomId || !hotelId || !checkInDate || !checkOutDate || !totalPrice || !numberOfGuests) {
+    const { userId, roomId, checkInDate, checkOutDate, numberOfGuests } = req.body;
+    if (!userId || !roomId || !checkInDate || !checkOutDate || !numberOfGuests) {
       return res.status(400).json({ message: "All fields are required" });
     }
     const overlappingBookings = await checkAvailability(roomId, new Date(checkInDate), new Date(checkOutDate));
@@ -50,14 +50,15 @@ export const createBooking = async (req: Request, res: Response) => {
     if (checkIn >= checkOut) {
       return res.status(400).json({ message: "Check-out date must be after check-in date" });
     }
-
+const room = await Room.findOne({ _id: roomId });
     const timeDiff = Math.abs(checkOut.getTime() - checkIn.getTime());
     const numberOfNights = Math.ceil(timeDiff / (1000 * 3600 * 24));
-   const  total = totalPrice *numberOfNights ;
+    const totalPrice = room!.pricePerNight
+   const  total = totalPrice*numberOfNights ;
     const newBooking = new Booking({
       user: userId,
       room: roomId,
-      hotel: hotelId,
+      hotel: room?.hotel,
       checkInDate,
       checkOutDate,
       totalPrice:total,

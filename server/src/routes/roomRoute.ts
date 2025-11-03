@@ -7,6 +7,6 @@ const roomRoute= Router()
 
 roomRoute.post("/",UserAuthmiddleware,roomMiddleware, upload.array("images", 4) ,createRoom)
 roomRoute.get("/",getAllRooms)
-roomRoute.get("/owner", UserAuthmiddleware ,getOwnerRooms)
+roomRoute.post("/owner", UserAuthmiddleware ,getOwnerRooms)
 roomRoute.patch("/availability/:roomId", UserAuthmiddleware ,toggleRoomAvailability)
 export default roomRoute

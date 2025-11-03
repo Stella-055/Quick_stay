@@ -1,5 +1,5 @@
 import React from "react";
-import { roomsDummyData, assets, facilityIcons } from "../assets/assets";
+import {  assets, facilityIcons } from "../assets/assets";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Starrating from "../Components/Starrating";
 import { useState } from "react";

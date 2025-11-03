@@ -1,21 +1,27 @@
 import React, { useState } from "react";
-import { useEffect } from "react";
+import { useUser } from "@clerk/clerk-react";
+import { ToastContainer, toast } from 'react-toastify';
 import { useParams } from "react-router-dom";
 import {
-  roomsDummyData,
   assets,
   facilityIcons,
   roomCommonData,
 } from "../assets/assets";
 import axios from "axios";
 import api from "../config/api";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery,useMutation } from "@tanstack/react-query";
 import Starrating from "../Components/Starrating";
-
+import { useNavigate } from "react-router-dom";
 const Roomdetails = () => {
   const { id } = useParams();
 const [room, setRoom] = useState(null);
+const navigate=useNavigate();
+const {id:userId} = useUser();
   const [mainImage, setMainImage] = useState(null);
+  const [checkInDate, setCheckInDate] = useState("");
+  const [checkOutDate, setCheckOutDate] = useState("");
+  const [guests, setGuests] = useState(1);
+
   const { data, isLoading, isError ,error} = useQuery({
     queryKey: ['featuredDestinations'],
     queryFn: async () => {
@@ -37,7 +43,47 @@ const [room, setRoom] = useState(null);
       setMainImage(roomData.images[0]);
     }
   }
- 
+  const[available,setAvailable]=useState(false);
+  const checkavailability = useMutation({
+    mutationKey: ['checkAvailability'],
+    mutationFn: async (Details) => {
+   
+      const response = await api.post(`/bookings/check-availability`,Details);
+      return response.data;
+    },
+    onError: (error) => {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data.message || "Error fetching user");
+      } else {
+        toast.error("Something went wrong");
+      }
+    },
+    onSuccess: (data) => {
+    if(data.message==="Room is available for the selected dates."){
+      toast.success("Room is available for the selected dates.");
+      setAvailable(true);}
+      else{
+        toast.info("Room is not available for the selected dates.");
+        setAvailable(false);
+      }
+    },  });
+    const book = useMutation({
+      mutationKey: ['bookRoom'],
+      mutationFn: async (details) => {
+     
+        const response = await api.post(`/bookings/book`,details);
+        return response.data;
+      },
+      onError: (error) => {
+        if (axios.isAxiosError(error)) {
+          toast.error(error.response?.data.message || "Error fetching user");
+        } else {
+          toast.error("Something went wrong");
+        }
+      },
+      onSuccess: (data) => {
+      navigate("/my-bookings");
+      },  });
   return (
     room && (
       <div className="py-28 md:py-35 px-4 md:px-16 lg:px-24 xl:px-32">
@@ -80,7 +126,17 @@ const [room, setRoom] = useState(null);
               ))}
           </div>
         </div>
-
+<ToastContainer position="bottom-right"
+    autoClose={5000}
+    hideProgressBar={false}
+    newestOnTop={false}
+    closeOnClick={false}
+    rtl={false}
+    pauseOnFocusLoss
+    draggable
+    pauseOnHover
+    theme="light"
+    transition={Bounce} />
         <div className="flex flex-col md:flex-row md:justify-between mt-10">
           <div className=" flex flex-col">
             <h1 className="text-xl md:text-4xl font-playfair">
@@ -110,6 +166,9 @@ const [room, setRoom] = useState(null);
               <input
                 type="date"
                 id="checkInDate"
+                min={new Date().toISOString().split("T")[0]}
+                value={checkInDate}
+                onChange={(e) => setCheckInDate(e.target.value)}
                 placeholder="Check-In"
                 className="w-full rounded border border-gray-300 px-3 py-2 mt-1.5 outline-none"
                 required
@@ -125,6 +184,9 @@ const [room, setRoom] = useState(null);
                 type="date"
                 id="checkOutDate"
                 placeholder="Check-Out"
+                min={checkInDate}
+                value={checkOutDate}
+                onChange={(e) => setCheckOutDate(e.target.value)}
                 className="w-full rounded border border-gray-300 px-3 py-2 mt-1.5 outline-none"
                 required
               />
@@ -139,17 +201,38 @@ const [room, setRoom] = useState(null);
                 type="number"
                 id="guests"
                 placeholder="0"
+                onChange={(e) => setGuests(e.target.value)}
+                value={guests}
+                min={1}
                 className=" max-w-20 rounded border border-gray-300 px-3 py-2 mt-1.5 outline-none"
                 required
               />
             </div>
           </div>
-          <button
+          
+         
+          {available ? ( <button
             type="submit"
+            
+            onClick={(e)=>{
+              e.preventDefault();
+              book.mutate({roomId:id,checkInDate,checkOutDate,numberOfGuests:guests,userId});
+            }}
             className="bg-blue-500 hover:bg-blue-700 active:scale-95 transition-all text-white rounded-md max-md:w-full max-md:mt-6 md:px-25 py-3 md:py-4 text-base cursor-pointer"
           >
-            Check Availability
-          </button>
+            {book.isPending ? "Booking..."  : "Book Now"}
+           
+          </button>):( <button
+            type="submit"
+            onClick={(e)=>{
+              e.preventDefault();
+              checkavailability.mutate({roomId:id,checkInDate,checkOutDate});
+            }}
+            className="bg-blue-500 hover:bg-blue-700 active:scale-95 transition-all text-white rounded-md max-md:w-full max-md:mt-6 md:px-25 py-3 md:py-4 text-base cursor-pointer"
+          >
+            {checkavailability.isPending ? "Checking..." : "check Availability"}
+           
+          </button>)}
         </form>
         <div className="mt-25 space-y-4">
           {roomCommonData.map((spec, index) => (

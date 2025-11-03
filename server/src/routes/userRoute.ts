@@ -4,6 +4,6 @@ import { UserAuthmiddleware } from "../middleware/userauthMiddleware";
 import { addToRecentSearch, userData } from "../controllers/userController";
 const userRoute = Router()
 
-userRoute.get("/",UserAuthmiddleware,userData)
-userRoute.get("/store-recent-search",UserAuthmiddleware,addToRecentSearch)
+userRoute.post("/",UserAuthmiddleware,userData)
+userRoute.post("/store-recent-search",UserAuthmiddleware,addToRecentSearch)
 export default userRoute
