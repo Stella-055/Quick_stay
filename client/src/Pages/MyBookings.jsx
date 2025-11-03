@@ -1,10 +1,33 @@
 import React, { useState } from "react";
 import Title from "../Components/Title";
-import { userBookingsDummyData } from "../assets/assets";
+import { useQuery } from "@tanstack/react-query";
+import api from "../config/api";
+import { useUser } from "@clerk/clerk-react";
 import { assets } from "../assets/assets";
 
 const MyBookings = () => {
-  const [bookings, setBookings] = useState(userBookingsDummyData);
+  const [bookings, setBookings] = useState([]);
+  const { user } = useUser();
+  const userId = user.id;
+  const { data, isLoading, isError ,error} = useQuery({
+    queryKey: ['my bookings'],
+    queryFn: async () => {
+      const response = await api.get(`/booking/user/${userId}`);
+      return response.data;
+    },
+  });
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    return <div>{error.message}|| something went wrong</div>;
+  }
+  React.useEffect(() => {
+    if (data) {
+      setBookings(data);
+    }
+  }, [data]);
   return (
     <div className="py-28 md:pb-35 md:pt-32 px-4 md:px-16 lg:px-24 xl:px-32">
       <Title
