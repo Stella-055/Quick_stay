@@ -2,7 +2,8 @@ import { Request, Response } from "express";
 import Booking from "../models/Booking";
 import Room from "../models/Room";
 import Hotel from "../models/Hotel";
-
+import User from "../models/User";
+import { transporter } from "../utils/Nodemailer";
 const checkAvailability= async (roomId: string, checkInDate: Date, checkOutDate: Date) => {
   const overlappingBookings = await Booking.find({
     room: roomId,
@@ -65,6 +66,26 @@ const room = await Room.findOne({ _id: roomId });
       numberOfGuests
     });
     await newBooking.save();
+    const user= await User.findById(userId);
+    await transporter.sendMail({
+      from: '"Quick stay hotel booking" <' + process.env.SENDER_EMAIL + '>', 
+      to: user?.email,
+      subject: "Room Booking ✔",
+      text: "Your booking is confirmed!",
+      html:`<h1>Booking Confirmation</h1>
+      <p>Dear ${user?.username},</p>
+      <p>Thank you for booking with Quick Stay Hotel. Your booking has been confirmed.</p>
+      <h3>Booking Details:</h3>
+      <ul>
+        <li> <strong>Room :</strong>  ${room?._id} ${room?.roomType}</li>
+        <li> <strong> Check-In Date: </strong> ${new Date(checkInDate).toDateString()}</li>
+        <li> <strong> Check-Out Date: </strong> ${new Date(checkOutDate).toDateString()}</li>
+        <li> <strong> Number of Guests:  </strong> ${numberOfGuests}</li>
+        <li> <strong> Total Price:  </strong> $${total}</li>
+      </ul>
+      <p>We look forward to hosting you!</p>
+      <p>Best regards,<br/>Quick Stay Hotel Team</p>`, 
+    });
     res.status(201).json({ message: "Booking created successfully", booking: newBooking });
   } catch (error) {
     res.status(500).json({ message: "Internal server error" });
