@@ -4,11 +4,12 @@ import { useUserDetails } from "../store/userStore";
 import { useMutation } from "@tanstack/react-query";
 import api from "../config/api";
 import { useUser } from "@clerk/clerk-react";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast , Bounce } from 'react-toastify';
   import axios from "axios";
 const HotelReg = () => {
   const { setshowHotelReg,setisOwner } = useUserDetails();
   const {user}=useUser();
+  
   const[hotelDetails,setHotelDetails]=React.useState({
    
     name:"",
@@ -131,7 +132,7 @@ const HotelReg = () => {
           </div>
           <button onClick={handleSubmit} className="bg-indigo-500 hover:bg-indigo-600 transition-all text-white mr-auto px-6 py-2 rounded cursor-pointer mt-6">
            
-           {isPending?"Registering...":Register} 
+           {isPending?"Registering...":"Register"} 
           </button>
           <ToastContainer position="bottom-right"
 autoClose={5000}

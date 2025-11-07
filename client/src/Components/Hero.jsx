@@ -1,15 +1,21 @@
 import React, {  useEffect } from "react";
 import { assets, cities } from "../assets/assets";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast,Bounce } from 'react-toastify';
 import { useUserDetails } from "../store/userStore";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import api from "../config/api";
 import axios from "axios";
 import { useUser } from "@clerk/clerk-react";
-const Hero = () => {
+import { useAuth } from "@clerk/clerk-react";
+
+
+const Hero = async () => {
   const{formError,setsearchedCities}= useUserDetails();
   const { user } = useUser();
+  const { getToken } = useAuth();
+
+const token = await getToken();
   const navigate = useNavigate();
   const {citysearched, setCitysearched}= useUserDetails("");
 
@@ -31,7 +37,9 @@ const Hero = () => {
   const { mutate } = useMutation({
     mutationFn: async (details) => {
    
-      const response = await api.post(`/user/store-recent-search`,details);
+      const response = await api.post(`/user/store-recent-search`, details, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       return response.data;
     },
     onError: (error) => {
