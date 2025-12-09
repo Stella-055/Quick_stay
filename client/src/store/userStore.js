@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { persist } from "zustand/middleware";
 import { useMutation } from "@tanstack/react-query";
 import api from "../config/api";
-
+import { useAuth } from "@clerk/clerk-react";
 
 const useUserDetailsStore = create(
   persist(
@@ -25,7 +25,9 @@ const useUserDetailsStore = create(
 
 export function useUserDetails() {
   const { user } = useUser();
+  const { getToken } = useAuth();
 
+  const token =  getToken();
   const navigate = useNavigate();
   const {
     isOwner,
@@ -41,7 +43,7 @@ export function useUserDetails() {
   const { mutate } = useMutation({
     mutationFn: async ({ userId }) => {
    
-      const response = await api.get(`/user`,userId);
+      const response = await api.post(`/user`,userId,{  headers: { Authorization: `Bearer ${token}` }});
       return response.data;
     },
     onError: (error) => {

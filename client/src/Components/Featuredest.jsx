@@ -6,11 +6,11 @@ import { useNavigate } from "react-router-dom";
 import api from "../config/api";
 import { useAuth } from "@clerk/clerk-react";
 import { useQuery } from "@tanstack/react-query";
-const Featuredest = async () => {
+const Featuredest =  () => {
   const navigate = useNavigate();
   const { getToken } = useAuth();
 
-  const token = await getToken();
+  const token =  getToken();
 const { data, isLoading, isError ,error} = useQuery({
     queryKey: ['featuredDestinations'],
     queryFn: async () => {
@@ -42,7 +42,7 @@ const { data, isLoading, isError ,error} = useQuery({
         subtitle="Explore the best hotels in your favorite destinations and discover exciting homes and properties around the world "
       />
       <div className="flex  flex-wrap items-center justify-center gap-6 mt-20 ">
-        {data.slice(0, 4).map((room, index) => (
+ {data && data.slice(0, 4).map((room, index) => (
           <Hotelcard room={room} key={room._id} index={index} />
         ))}
       </div>

@@ -9,14 +9,14 @@ import { ToastContainer, toast , Bounce } from 'react-toastify';
 const HotelReg = () => {
   const { setshowHotelReg,setisOwner } = useUserDetails();
   const {user}=useUser();
-  
+  console.log("user in hotel reg",user);
   const[hotelDetails,setHotelDetails]=React.useState({
    
     name:"",
     contact:"",
     address:"",
     city:"",
-    userId: user.id
+    userId: user.id || "",
   });
   const { mutate, isPending} = useMutation({
     mutationKey: ['registerHotel'],

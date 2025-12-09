@@ -10,12 +10,12 @@ import { useUser } from "@clerk/clerk-react";
 import { useAuth } from "@clerk/clerk-react";
 
 
-const Hero = async () => {
+const Hero =  () => {
   const{formError,setsearchedCities}= useUserDetails();
   const { user } = useUser();
   const { getToken } = useAuth();
 
-const token = await getToken();
+const token =  getToken();
   const navigate = useNavigate();
   const {citysearched, setCitysearched}= useUserDetails("");
 
