@@ -42,9 +42,8 @@ const { data, isLoading, isError ,error} = useQuery({
         subtitle="Explore the best hotels in your favorite destinations and discover exciting homes and properties around the world "
       />
       <div className="flex  flex-wrap items-center justify-center gap-6 mt-20 ">
- {data && data.slice(0, 4).map((room, index) => (
-          <Hotelcard room={room} key={room._id} index={index} />
-        ))}
+      
+ 
       </div>
        <ToastContainer position="bottom-right"
       autoClose={5000}

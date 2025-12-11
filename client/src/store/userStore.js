@@ -42,8 +42,8 @@ export function useUserDetails() {
 
   const { mutate } = useMutation({
     mutationFn: async ({ userId }) => {
-   
-      const response = await api.post(`/user`,userId,{  headers: { Authorization: `Bearer ${token}` }});
+     
+      const response = await api.post(`/user`,{userId},{  headers: { Authorization: `Bearer ${token}` }});
       return response.data;
     },
     onError: (error) => {
