@@ -10,6 +10,7 @@ import clerkRoute from "./routes/clerkRoute";
 import hotelRoute from "./routes/hotelRoute";
 import roomRoute from "./routes/roomRoute";
 import bookingRoute from "./routes/bookingRoute";
+import bodyParser from "body-parser";
 dbConnect();
 cloudinaryConfig();
 const app = express();
@@ -20,6 +21,9 @@ app.use(
     origin: ["http://localhost:5173", "https://qshotel.netlify.app/"],
     credentials: true,
   }),
+);
+app.use("/api/clerk", 
+  bodyParser.raw({ type: "application/json" })
 );
 app.use("/api/clerk", clerkRoute);
 app.use("/api/user", userRoute);

@@ -11,9 +11,12 @@ import type { Request, Response } from "express";
       "svix-signature": req.headers["svix-signature"] as string,
     };
 
-    await wh.verify(JSON.stringify(req.body), headers);
+   
 
+   
+   await wh.verify(req.body, headers); 
     const { data, event_type } = req.body;
+    
     const userData = {
       _id: data.id,
       username: data.username,
