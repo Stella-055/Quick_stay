@@ -4,25 +4,23 @@ import { useUserDetails } from "../store/userStore";
 import { useMutation } from "@tanstack/react-query";
 import api from "../config/api";
 import { useUser } from "@clerk/clerk-react";
-import { ToastContainer, toast , Bounce } from 'react-toastify';
-  import axios from "axios";
+import { ToastContainer, toast, Bounce } from "react-toastify";
+import axios from "axios";
 const HotelReg = () => {
-  const { setshowHotelReg,setisOwner } = useUserDetails();
-  const {user}=useUser();
- 
-  const[hotelDetails,setHotelDetails]=React.useState({
-   
-    name:"",
-    contact:"",
-    address:"",
-    city:"",
+  const { setshowHotelReg, setisOwner } = useUserDetails();
+  const { user } = useUser();
+
+  const [hotelDetails, setHotelDetails] = React.useState({
+    name: "",
+    contact: "",
+    address: "",
+    city: "",
     userId: user?.id || "",
   });
-  const { mutate, isPending} = useMutation({
-    mutationKey: ['registerHotel'],
+  const { mutate, isPending } = useMutation({
+    mutationKey: ["registerHotel"],
     mutationFn: async ({ hotel }) => {
-   
-      const response = await api.post(`/hotels`,hotel );
+      const response = await api.post(`/hotels`, hotel);
       return response.data;
     },
     onError: (error) => {
@@ -33,7 +31,8 @@ const HotelReg = () => {
       }
     },
     onSuccess: () => {
-      toast.success("Hotel Registered Successfully",{position: "top-right",
+      toast.success("Hotel Registered Successfully", {
+        position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: false,
@@ -41,21 +40,20 @@ const HotelReg = () => {
         draggable: true,
         progress: undefined,
         theme: "light",
-        transition: Bounce,});
-        setshowHotelReg(false)
-    setisOwner(true);
+        transition: Bounce,
+      });
+      setshowHotelReg(false);
+      setisOwner(true);
     },
-    
-
   });
-  const handleSubmit=(e)=>{
+  const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("hotel details",hotelDetails);
-    mutate( { hotel:hotelDetails} );
-  }
+    console.log("hotel details", hotelDetails);
+    mutate({ hotel: hotelDetails });
+  };
   return (
     <div className="fixed top-0 bottom-0 left-0 right-0 z-100 flex items-center justify-center bg-black/70">
-      <form  className="flex bg-white rounded-xl max-w-4xl max-md:mx-2">
+      <form className="flex bg-white rounded-xl max-w-4xl max-md:mx-2">
         <img
           src={assets.regImage}
           alt=""
@@ -79,7 +77,9 @@ const HotelReg = () => {
               type="text"
               id="name"
               placeholder="Type here"
-              onChange={(e)=>setHotelDetails({...hotelDetails,name:e.target.value})}
+              onChange={(e) =>
+                setHotelDetails({ ...hotelDetails, name: e.target.value })
+              }
               className="border border-gray-200 rounded w-full px-3 py-2.5 mt-1 outline-indigo-500 font-light"
               required
             />
@@ -92,7 +92,9 @@ const HotelReg = () => {
             <input
               type="text"
               id="contact"
-              onChange={(e)=>setHotelDetails({...hotelDetails,contact:e.target.value})}
+              onChange={(e) =>
+                setHotelDetails({ ...hotelDetails, contact: e.target.value })
+              }
               placeholder="Type here"
               className="border border-gray-200 rounded w-full px-3 py-2.5 mt-1 outline-indigo-500 font-light"
               required
@@ -106,7 +108,9 @@ const HotelReg = () => {
             <input
               type="text"
               id="address"
-              onChange={(e)=>setHotelDetails({...hotelDetails,address:e.target.value})}
+              onChange={(e) =>
+                setHotelDetails({ ...hotelDetails, address: e.target.value })
+              }
               placeholder="Type here"
               className="border border-gray-200 rounded w-full px-3 py-2.5 mt-1 outline-indigo-500 font-light"
               required
@@ -118,38 +122,41 @@ const HotelReg = () => {
               City
             </label>
             <select
-  id="city"
-  className="border border-gray-200 rounded w-full px-3 py-2.5 mt-1 outline-indigo-500 font-light"
-  required
-  value={hotelDetails.city}
-  onChange={(e) =>
-    setHotelDetails({ ...hotelDetails, city: e.target.value })
-  }
->
-  <option value="">Select City</option>
-  {cities.map((city) => (
-    <option key={city} value={city}>
-      {city}
-    </option>
-  ))}
-</select>
-
+              id="city"
+              className="border border-gray-200 rounded w-full px-3 py-2.5 mt-1 outline-indigo-500 font-light"
+              required
+              value={hotelDetails.city}
+              onChange={(e) =>
+                setHotelDetails({ ...hotelDetails, city: e.target.value })
+              }
+            >
+              <option value="">Select City</option>
+              {cities.map((city) => (
+                <option key={city} value={city}>
+                  {city}
+                </option>
+              ))}
+            </select>
           </div>
-          <button onClick={handleSubmit} className="bg-indigo-500 hover:bg-indigo-600 transition-all text-white mr-auto px-6 py-2 rounded cursor-pointer mt-6">
-           
-           {isPending?"Registering...":"Register"} 
+          <button
+            onClick={handleSubmit}
+            className="bg-indigo-500 hover:bg-indigo-600 transition-all text-white mr-auto px-6 py-2 rounded cursor-pointer mt-6"
+          >
+            {isPending ? "Registering..." : "Register"}
           </button>
-          <ToastContainer position="bottom-right"
-autoClose={5000}
-hideProgressBar={false}
-newestOnTop={false}
-closeOnClick={false}
-rtl={false}
-pauseOnFocusLoss
-draggable
-pauseOnHover
-theme="light"
-transition={Bounce} />
+          <ToastContainer
+            position="bottom-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick={false}
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+            transition={Bounce}
+          />
         </div>
       </form>
     </div>

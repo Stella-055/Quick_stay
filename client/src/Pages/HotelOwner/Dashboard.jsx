@@ -2,18 +2,21 @@ import React, { useState } from "react";
 import Title from "../../Components/Title";
 import { assets, dashboardDummyData } from "../../assets/assets";
 import { useMutation } from "@tanstack/react-query";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import { useUser } from "@clerk/clerk-react";
 import api from "../../config/api";
 const Dashboard = () => {
-  const [dashboarddata, setDashboarddata] = useState({bookings:[],totalBookings:0,totalRevenue:0});
-  const {user}=useUser();
-  const { mutate, isPending} = useMutation({
-    mutationKey: ['dashboardData'],
-    mutationFn: async ( owner ) => {
-   
-      const response = await api.post(`/bookings/owner`,owner);
+  const [dashboarddata, setDashboarddata] = useState({
+    bookings: [],
+    totalBookings: 0,
+    totalRevenue: 0,
+  });
+  const { user } = useUser();
+  const { mutate, isPending } = useMutation({
+    mutationKey: ["dashboardData"],
+    mutationFn: async (owner) => {
+      const response = await api.post(`/bookings/owner`, owner);
       return response.data;
     },
     onError: (error) => {
@@ -24,18 +27,15 @@ const Dashboard = () => {
       }
     },
     onSuccess: (data) => {
-      setDashboarddata(
-        {bookings:data.bookings,
-        totalBookings:data.totalBookings,
-        totalRevenue:data.totalRevenue}
-      )
-  
+      setDashboarddata({
+        bookings: data.bookings,
+        totalBookings: data.totalBookings,
+        totalRevenue: data.totalRevenue,
+      });
     },
-    
-
   });
   React.useEffect(() => {
-    if(user?.id){
+    if (user?.id) {
       mutate({ ownerId: user.id });
     }
   }, [user]);

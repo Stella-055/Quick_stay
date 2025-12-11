@@ -1,10 +1,10 @@
-import "dotenv/config"; 
+import "dotenv/config";
 import type { Request, Response } from "express";
 import express from "express";
 import cors from "cors";
 import userRoute from "./routes/userRoute";
 import { dbConnect } from "./utils/db";
-import {cloudinaryConfig} from "./utils/cloudinary";
+import { cloudinaryConfig } from "./utils/cloudinary";
 import { clerkMiddleware } from "@clerk/express";
 import clerkRoute from "./routes/clerkRoute";
 import hotelRoute from "./routes/hotelRoute";
@@ -22,14 +22,12 @@ app.use(
     credentials: true,
   }),
 );
-app.use("/api/clerk", 
-  bodyParser.raw({ type: "application/json" })
-);
+app.use("/api/clerk", bodyParser.raw({ type: "application/json" }));
 app.use("/api/clerk", clerkRoute);
 app.use("/api/user", userRoute);
-app.use("/api/hotels", hotelRoute)
-app.use("/api/rooms", roomRoute)
-app.use("/api/bookings",bookingRoute)
+app.use("/api/hotels", hotelRoute);
+app.use("/api/rooms", roomRoute);
+app.use("/api/bookings", bookingRoute);
 app.get("/", (req: Request, res: Response) => {
   res.send("welcome to quick stay");
 });

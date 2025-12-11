@@ -8,8 +8,7 @@ const Layout = () => {
   const { isOwner } = useUserDetails();
   const navigate = useNavigate();
   useEffect(() => {
-    if (!isOwner) 
-      navigate("/");
+    if (!isOwner) navigate("/");
   }, [isOwner]);
   return (
     <div className="flex flex-col h-screen">

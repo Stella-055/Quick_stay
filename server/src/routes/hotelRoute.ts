@@ -3,8 +3,8 @@ import { UserAuthmiddleware } from "../middleware/userauthMiddleware";
 import { registerHotel } from "../controllers/hotelController";
 import { hotelmiddleware } from "../middleware/hotelRegMiddliware";
 
-const hotelRoute= Router()
+const hotelRoute = Router();
 
-hotelRoute.post("/",UserAuthmiddleware, hotelmiddleware, registerHotel)
+hotelRoute.post("/", UserAuthmiddleware, hotelmiddleware, registerHotel);
 
-export default hotelRoute
+export default hotelRoute;

@@ -1,5 +1,5 @@
 import React from "react";
-import {  assets, facilityIcons } from "../assets/assets";
+import { assets, facilityIcons } from "../assets/assets";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Starrating from "../Components/Starrating";
 import { useState } from "react";
@@ -34,7 +34,7 @@ const Radiobutton = ({ label, selected = false, onChange = () => {} }) => {
 const AllRooms = () => {
   const navigate = useNavigate();
   const [openFilters, setopenFilters] = useState(false);
-  const {city}=useSearchParams();
+  const { city } = useSearchParams();
   const roomTypes = [
     "Single Room",
     "Double Room",
@@ -48,10 +48,10 @@ const AllRooms = () => {
     "2000 to3000",
   ];
   const sortOptions = ["Price low to high", "high to low", "Newest First"];
-  const { data, isLoading, isError ,error} = useQuery({
-    queryKey: ['featuredDestinations'],
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["featuredDestinations"],
     queryFn: async () => {
-      const response = await api.get('/rooms');
+      const response = await api.get("/rooms");
       return response.data;
     },
   });
@@ -63,20 +63,23 @@ const AllRooms = () => {
     return <div>{error.message}|| something went wrong</div>;
   }
   const [rooms, setrooms] = React.useState(data);
-  if(city.get("city")){
-    React.useEffect(()=>{
-      const filteredRoomsByCity = data.filter((room) => room.hotel.city.toLowerCase() === city.get("city").toLowerCase());
+  if (city.get("city")) {
+    React.useEffect(() => {
+      const filteredRoomsByCity = data.filter(
+        (room) =>
+          room.hotel.city.toLowerCase() === city.get("city").toLowerCase(),
+      );
       setrooms(filteredRoomsByCity);
-    },[city]);
+    }, [city]);
   }
-  function filterRoomType (type) {
+  function filterRoomType(type) {
     const filteredRooms = rooms.filter((room) => room.roomType === type);
     setrooms(filteredRooms);
   }
   const filterPriceRange = (range) => {
     const [min, max] = range.split(" to ").map(Number);
     const filteredRooms = rooms.filter(
-      (room) => room.pricePerNight >= min && room.pricePerNight <= max
+      (room) => room.pricePerNight >= min && room.pricePerNight <= max,
     );
     setrooms(filteredRooms);
   };
@@ -173,19 +176,31 @@ const AllRooms = () => {
           <div className="px-5 pt-5">
             <p className=" font-medium text-gray-800 pb-2">Popular Filters</p>
             {roomTypes.map((room, index) => (
-              <Checkbox key={index} label={room}  onchange={ ()=>filterRoomType(room)}/>
+              <Checkbox
+                key={index}
+                label={room}
+                onchange={() => filterRoomType(room)}
+              />
             ))}
           </div>
           <div className="px-5 pt-5">
             <p className=" font-medium text-gray-800 pb-2">Price Range</p>
             {priceranges.map((range, index) => (
-              <Checkbox key={index} label={`$ ${range}`}  onChange={()=>filterPriceRange(range)}/>
+              <Checkbox
+                key={index}
+                label={`$ ${range}`}
+                onChange={() => filterPriceRange(range)}
+              />
             ))}
           </div>
           <div className="px-5 pt-5">
             <p className=" font-medium text-gray-800 pb-2">sort By</p>
             {sortOptions.map((option, index) => (
-              <Radiobutton key={index} label={option}  onChange={()=>sortRooms(option)}/>
+              <Radiobutton
+                key={index}
+                label={option}
+                onChange={() => sortRooms(option)}
+              />
             ))}
           </div>
         </div>

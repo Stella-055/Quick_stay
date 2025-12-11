@@ -1,21 +1,21 @@
 import React from "react";
 import Hotelcard from "./Hotelcard";
-import { ToastContainer, toast,Bounce } from 'react-toastify';
+import { ToastContainer, toast, Bounce } from "react-toastify";
 import Title from "./Title";
 import { useNavigate } from "react-router-dom";
 import api from "../config/api";
 import { useAuth } from "@clerk/clerk-react";
 import { useQuery } from "@tanstack/react-query";
-const Featuredest =  () => {
+const Featuredest = () => {
   const navigate = useNavigate();
   const { getToken } = useAuth();
 
-  const token =  getToken();
-const { data, isLoading, isError ,error} = useQuery({
-    queryKey: ['featuredDestinations'],
+  const token = getToken();
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["featuredDestinations"],
     queryFn: async () => {
-      const response = await api.get('/rooms', {
-        headers: { Authorization: `Bearer ${token}` }
+      const response = await api.get("/rooms", {
+        headers: { Authorization: `Bearer ${token}` },
       });
       return response.data;
     },
@@ -25,15 +25,17 @@ const { data, isLoading, isError ,error} = useQuery({
   }
 
   if (isError) {
-    return   toast.error(error ,{position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-          transition: Bounce,});
+    return toast.error(error, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      transition: Bounce,
+    });
   }
   return (
     <div className="flex flex-col items-center justify-center px-6 md:px-16 lg:px-24  bg-slate-50 pb-10 pt-20">
@@ -41,21 +43,20 @@ const { data, isLoading, isError ,error} = useQuery({
         title="Featured Destinations"
         subtitle="Explore the best hotels in your favorite destinations and discover exciting homes and properties around the world "
       />
-      <div className="flex  flex-wrap items-center justify-center gap-6 mt-20 ">
-      
- 
-      </div>
-       <ToastContainer position="bottom-right"
-      autoClose={5000}
-      hideProgressBar={false}
-      newestOnTop={false}
-      closeOnClick={false}
-      rtl={false}
-      pauseOnFocusLoss
-      draggable
-      pauseOnHover
-      theme="light"
-      transition={Bounce} />
+      <div className="flex  flex-wrap items-center justify-center gap-6 mt-20 "></div>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
       <button
         onClick={() => {
           navigate("/rooms");

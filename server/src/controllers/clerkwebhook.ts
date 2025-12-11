@@ -2,7 +2,7 @@ import webhook from "svix";
 import User from "../models/User";
 import type { Request, Response } from "express";
 
- export const clerkwebhook = async (req: Request, res: Response) => {
+export const clerkwebhook = async (req: Request, res: Response) => {
   const wh = new webhook.Webhook(process.env.CLERK_WEBHOOK_SECRET!);
   try {
     const headers = {
@@ -11,12 +11,9 @@ import type { Request, Response } from "express";
       "svix-signature": req.headers["svix-signature"] as string,
     };
 
-   
-
-   
-   await wh.verify(req.body, headers); 
+    await wh.verify(req.body, headers);
     const { data, event_type } = req.body;
-    
+
     const userData = {
       _id: data.id,
       username: data.username,
@@ -24,23 +21,21 @@ import type { Request, Response } from "express";
       image: data.image_url,
     };
 
-    switch (event_type){
-        case "user.created":
-            const newUser = new User(userData)
-            await newUser.save()
-            return res.status(200).json({message: "user created"})
-        case "user.deleted":
-            await User.findByIdAndDelete(data.id)
-            return res.status(200).json({message: "user deleted"})
-        case "user.updated":
-            await User.findByIdAndUpdate(data.id, userData)
-            return res.status(200).json({message: "user updated"})
-        default:
-            return res.status(400).json({message: "event type not supported"})
-
+    switch (event_type) {
+      case "user.created":
+        const newUser = new User(userData);
+        await newUser.save();
+        return res.status(200).json({ message: "user created" });
+      case "user.deleted":
+        await User.findByIdAndDelete(data.id);
+        return res.status(200).json({ message: "user deleted" });
+      case "user.updated":
+        await User.findByIdAndUpdate(data.id, userData);
+        return res.status(200).json({ message: "user updated" });
+      default:
+        return res.status(400).json({ message: "event type not supported" });
     }
   } catch (error) {
     res.status(500).json({ message: "internal server error" });
   }
 };
-

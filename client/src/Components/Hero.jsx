@@ -1,6 +1,6 @@
-import React, {  useEffect } from "react";
+import React, { useEffect } from "react";
 import { assets, cities } from "../assets/assets";
-import { ToastContainer, toast,Bounce } from 'react-toastify';
+import { ToastContainer, toast, Bounce } from "react-toastify";
 import { useUserDetails } from "../store/userStore";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
@@ -9,36 +9,35 @@ import axios from "axios";
 import { useUser } from "@clerk/clerk-react";
 import { useAuth } from "@clerk/clerk-react";
 
-
-const Hero =  () => {
-  const{formError,setsearchedCities}= useUserDetails();
+const Hero = () => {
+  const { formError, setsearchedCities } = useUserDetails();
   const { user } = useUser();
   const { getToken } = useAuth();
 
-const token =  getToken();
+  const token = getToken();
   const navigate = useNavigate();
-  const {citysearched, setCitysearched}= useUserDetails("");
-
+  const { citysearched, setCitysearched } = useUserDetails("");
 
   useEffect(() => {
     if (formError) {
-      toast.error(formError ,{position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: false,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-      transition: Bounce,});
+      toast.error(formError, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
     }
   }, [formError]);
 
   const { mutate } = useMutation({
     mutationFn: async (details) => {
-   
       const response = await api.post(`/user/store-recent-search`, details, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
       return response.data;
     },
@@ -50,37 +49,36 @@ const token =  getToken();
       }
     },
     onSuccess: (data) => {
-      setsearchedCities((prevCities)=> {
-        const updatedCities = [ ...prevCities, citysearched];
+      setsearchedCities((prevCities) => {
+        const updatedCities = [...prevCities, citysearched];
         if (updatedCities.length > 3) {
-          updatedCities.shift(); 
+          updatedCities.shift();
         }
         return updatedCities;
       });
-      navigate("/rooms/?city="+citysearched);
-
+      navigate("/rooms/?city=" + citysearched);
     },
   });
   const search = (e) => {
     e.preventDefault();
-    mutate({ city: citysearched , userId: user?.id });
-  
-  
-  }
+    mutate({ city: citysearched, userId: user?.id });
+  };
 
   return (
     <div className='flex flex-col items-start justify-center px-6 md:px-16 lg:px-24 xl:px-32 text-white bg-[url("/src/assets/heroImage.png")]  bg-no-repeat bg-cover bg-center h-screen w-full '>
-      <ToastContainer position="bottom-right"
-autoClose={5000}
-hideProgressBar={false}
-newestOnTop={false}
-closeOnClick={false}
-rtl={false}
-pauseOnFocusLoss
-draggable
-pauseOnHover
-theme="light"
-transition={Bounce} />
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
       <p className="bg-[(#49B9FF)]/50 PX-3.5 py-1 rounded-full mt-20">
         The Ultimate Home Experience
       </p>
@@ -94,7 +92,10 @@ transition={Bounce} />
         difference.
       </p>
 
-      <form onSubmit={search} className="bg-white text-gray-500 rounded-lg px-6 py-4  mt-8 flex flex-col md:flex-row max-md:items-start gap-4 max-md:mx-auto">
+      <form
+        onSubmit={search}
+        className="bg-white text-gray-500 rounded-lg px-6 py-4  mt-8 flex flex-col md:flex-row max-md:items-start gap-4 max-md:mx-auto"
+      >
         <div>
           <div className="flex items-center gap-2">
             <img src={assets.calenderIcon} alt="calender" className="h-4" />
@@ -107,14 +108,14 @@ transition={Bounce} />
             className=" rounded border border-gray-200 px-3 py-1.5 mt-1.5 text-sm outline-none"
             placeholder="Type here"
             value={citysearched}
-            onChange={(e)=>{
+            onChange={(e) => {
               setCitysearched(e.target.value);
             }}
             required
           />
           <datalist id="destinations">
             {cities.map((city, index) => (
-              <option key={index} value={city}  />
+              <option key={index} value={city} />
             ))}
           </datalist>
         </div>

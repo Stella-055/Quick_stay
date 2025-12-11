@@ -1,4 +1,4 @@
-import {  useUser } from "@clerk/clerk-react";
+import { useUser } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
 import { create } from "zustand";
 import { useEffect } from "react";
@@ -27,7 +27,7 @@ export function useUserDetails() {
   const { user } = useUser();
   const { getToken } = useAuth();
 
-  const token =  getToken();
+  const token = getToken();
   const navigate = useNavigate();
   const {
     isOwner,
@@ -42,8 +42,11 @@ export function useUserDetails() {
 
   const { mutate } = useMutation({
     mutationFn: async ({ userId }) => {
-     
-      const response = await api.post(`/user`,{userId},{  headers: { Authorization: `Bearer ${token}` }});
+      const response = await api.post(
+        `/user`,
+        { userId },
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
       return response.data;
     },
     onError: (error) => {

@@ -9,8 +9,8 @@ const MyBookings = () => {
   const [bookings, setBookings] = useState([]);
   const { user } = useUser();
   const userId = user.id;
-  const { data, isLoading, isError ,error} = useQuery({
-    queryKey: ['my bookings'],
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["my bookings"],
     queryFn: async () => {
       const response = await api.get(`/booking/user/${userId}`);
       return response.data;
