@@ -2,12 +2,15 @@ import React, { useState } from "react";
 import Title from "../../Components/Title";
 import { assets } from "../../assets/assets";
 import { useMutation } from "@tanstack/react-query";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer, toast ,Bounce} from "react-toastify";
 import axios from "axios";
-import { useUser } from "@clerk/clerk-react";
-const AddRoom = () => {
+import { useUser,useAuth } from "@clerk/clerk-react";
+import api from "../../config/api";
+const AddRoom =   () => {
   const { user } = useUser();
+  const { getToken } = useAuth();
 
+  
   const [images, setImages] = useState({
     1: null,
     2: null,
@@ -28,14 +31,21 @@ const AddRoom = () => {
   });
   const { mutate, isPending } = useMutation({
     mutationKey: ["addRoom"],
-    mutationFn: async (room) => {
-      const response = await api.post(`/room`, room);
+    mutationFn: async (formData) => {
+      const token =  await getToken();
+      const response = await api.post(`/rooms`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          
+        },
+      });
       return response.data;
     },
     onError: (error) => {
       if (axios.isAxiosError(error)) {
         toast.error(error.response?.data.message || "Error fetching user");
       } else {
+        console.error("Unexpected error:", error);
         toast.error("Something went wrong");
       }
     },
@@ -59,9 +69,17 @@ const AddRoom = () => {
       toast.error("Please fill all required fields and upload all images");
       return;
     }
-    const imageArray = Object.values(images);
-    const roomDetails = { room: inputs, images: imageArray, userId: user.id };
-    mutate(roomDetails);
+  
+    const formData = new FormData();
+    formData.append('room', JSON.stringify(inputs)); // Stringify room object
+    formData.append('userId', user.id);
+  
+    // Append each image (use same field name 'images' for array)
+    Object.values(images).forEach((img) => {
+      if (img) formData.append('images', img);
+    });
+   
+    mutate(formData); // Pass formData instead
   };
   return (
     <>
@@ -151,7 +169,7 @@ const AddRoom = () => {
               <input
                 type="checkbox"
                 id={`amenities${index + 1}`}
-                checked={inputs.amenities[amenity]}
+                checked={inputs.ammenities[amenity]}
                 onChange={() =>
                   setInputs({
                     ...inputs,

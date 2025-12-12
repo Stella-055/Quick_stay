@@ -12,9 +12,10 @@ const roomRoute = Router();
 
 roomRoute.post(
   "/",
+  upload.array("images", 4),
   UserAuthmiddleware,
   roomMiddleware,
-  upload.array("images", 4),
+ 
   createRoom,
 );
 roomRoute.get("/", getAllRooms);

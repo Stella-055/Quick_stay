@@ -10,13 +10,15 @@ const Featuredest = () => {
   const navigate = useNavigate();
   const { getToken } = useAuth();
 
-  const token = getToken();
+  
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["featuredDestinations"],
     queryFn: async () => {
+      const token =  await getToken();
       const response = await api.get("/rooms", {
         headers: { Authorization: `Bearer ${token}` },
       });
+   
       return response.data;
     },
   });
@@ -43,7 +45,17 @@ const Featuredest = () => {
         title="Featured Destinations"
         subtitle="Explore the best hotels in your favorite destinations and discover exciting homes and properties around the world "
       />
-      <div className="flex  flex-wrap items-center justify-center gap-6 mt-20 "></div>
+      <div className="flex  flex-wrap items-center justify-center gap-6 mt-20 ">
+   
+        {data &&
+      
+          data.rooms.slice(0, 4).map((hotel) => (
+            <Hotelcard key={hotel._id} room={hotel} />
+          ))}
+
+
+
+      </div>
       <ToastContainer
         position="bottom-right"
         autoClose={5000}

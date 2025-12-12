@@ -5,7 +5,10 @@ import { v2 as cloudinary } from "cloudinary";
 
 export const createRoom = async (req: Request, res: Response) => {
   try {
-    const { roomType, pricePerNight, ammenities, userId } = req.body;
+
+    const {  userId } = req.body;
+    
+    const {roomType, pricePerNight, ammenities,}=req.body.room
     const hotel = await Hotel.findOne({ owner: userId });
     if (!hotel) {
       return res.status(400).json({ message: "Hotel does not exists" });
@@ -27,6 +30,7 @@ export const createRoom = async (req: Request, res: Response) => {
     });
     res.status(200).json({ message: "room created successfully", room });
   } catch (error) {
+    console.error(" Create room error:", error);
     res.status(500).json({ message: "internal server error" });
   }
 };
@@ -37,8 +41,10 @@ export const getAllRooms = async (req: Request, res: Response) => {
       path: "hotel",
       populate: { path: "owner", select: "image" },
     });
+ 
     res.status(200).json({ message: "all rooms", rooms });
   } catch (error) {
+    console.error("Get all rooms error:", error);
     res.status(500).json({ message: "internal server error" });
   }
 };

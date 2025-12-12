@@ -7,7 +7,7 @@ const hotelShema = new mongoose.Schema(
     address: { type: String, required: true },
     contact: { type: String, require: true },
     city: { type: String, require: true },
-    owner: { type: String, require: true, ref: "user" },
+    owner: { type: String, require: true, ref: "User" },
   },
   { timestamps: true },
 );

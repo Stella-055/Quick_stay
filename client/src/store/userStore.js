@@ -51,7 +51,7 @@ export function useUserDetails() {
     },
     onError: (error) => {
       if (axios.isAxiosError(error)) {
-        setFormError(error.response?.data.message || "Error fetching user");
+        setFormError(error.response?.data.message || "Error fetching ffffuser");
       } else {
         setFormError("Something went wrong");
       }

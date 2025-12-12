@@ -4,7 +4,12 @@ export const roomMiddleware = (
   res: Response,
   next: NextFunction,
 ) => {
-  const { roomType, pricePerNight, ammenities } = req.body;
+
+  if (req.body.room) {
+    req.body.room = JSON.parse(req.body.room);
+  }
+  const { roomType, pricePerNight, ammenities } = req.body.room;
+  
   const files = req.files;
   if (!files || files.length === 0) {
     return res.status(400).json({ message: "At least one image is required" });
