@@ -57,13 +57,14 @@ export function useUserDetails() {
       }
     },
     onSuccess: (data) => {
-      setisOwner(data.role === "hotelOwner");
+      setisOwner(data.role === "hotelowner");
       setsearchedCities(data.recentSearchedCities || []);
     },
   });
 
   useEffect(() => {
-    if (user?.id) mutate({ userId: user.id });
+    if (user?.id)
+      { mutate({ userId: user.id })} 
   }, [user]);
 
   return {
