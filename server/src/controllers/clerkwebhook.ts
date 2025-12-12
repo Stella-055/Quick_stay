@@ -29,13 +29,13 @@ export const clerkwebhook = async (req: Request, res: Response) => {
     const evt = await wh.verify(req.body, headers) as ClerkWebhookEvent;
 
   
-    console.log(" Event data:", evt.data);
+   
 
     const { data, type } = evt; // Clerk uses "type", NOT "event_type"
 
     const userData = {
       _id: data.id,
-      username: data.username,
+      username: data.first_name,
       email: data.email_addresses?.[0]?.email_address,
       image: data.image_url,
     };
