@@ -1,9 +1,12 @@
-import webhook from "svix";
+import { Webhook } from "svix";
+
 import User from "../models/User";
 import type { Request, Response } from "express";
 
 export const clerkwebhook = async (req: Request, res: Response) => {
-  const wh = new webhook.Webhook(process.env.CLERK_WEBHOOK_SECRET!);
+  console.log("🔥 Clerk reached backend");
+
+  const wh = new Webhook(process.env.CLERK_WEBHOOK_SECRET!);
   try {
     const headers = {
       "svix-id": req.headers["svix-id"] as string,
@@ -12,6 +15,8 @@ export const clerkwebhook = async (req: Request, res: Response) => {
     };
 
     await wh.verify(req.body, headers);
+  
+    console.log(req.body)
     const { data, event_type } = req.body;
 
     const userData = {

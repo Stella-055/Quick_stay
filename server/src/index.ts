@@ -22,8 +22,9 @@ app.use(
     credentials: true,
   }),
 );
-app.use("/api/clerk", bodyParser.raw({ type: "application/json" }));
-app.use("/api/clerk", clerkRoute);
+app.use("/api/clerk", bodyParser.raw({ type: "application/json" }),clerkRoute);
+app.use(express.json());
+//app.use("/api/clerk", clerkRoute);
 app.use("/api/user", userRoute);
 app.use("/api/hotels", hotelRoute);
 app.use("/api/rooms", roomRoute);
