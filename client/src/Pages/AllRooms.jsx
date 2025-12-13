@@ -54,12 +54,14 @@ const AllRooms = () => {
     queryKey: ["featuredDestinations"],
     queryFn: async () => {
       const response = await api.get("/rooms");
+      console.log(response.data);
       return response.data;
+
     },
   });
   
-  const [rooms, setrooms] = React.useState(data);
-  if (city.get("city")) {
+  const [rooms, setrooms] = React.useState(data?.rooms);
+  if (city?.get("city")) {
     React.useEffect(() => {
       const filteredRoomsByCity = data.filter(
         (room) =>
@@ -108,7 +110,7 @@ const AllRooms = () => {
           </p>
         </div>
 
-        {rooms.map((room) => (
+        {rooms?.map((room) => (
           <div className="flex flex-col md:flex-row items-start py-10 gap-6 border-b  border-gray-300 last:pb-30 last:border-0">
             <img
               src={room.images[0]}
@@ -140,7 +142,9 @@ const AllRooms = () => {
                 <span>{room.hotel.address}</span>
               </div>
               <div className="flex flex-wrap items-center mt-3 mb-6 gap-4">
-                {room.amenities.map((item, index) => (
+                {Object.entries(room.ammenities[0])
+  .filter(([_, value]) => value === true)
+  .map(([key]) => key).map((item, index) => (
                   <div
                     key={index}
                     className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#F5F5FF]/70"
