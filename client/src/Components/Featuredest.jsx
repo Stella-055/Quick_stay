@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../config/api";
 import { useAuth } from "@clerk/clerk-react";
 import { useQuery } from "@tanstack/react-query";
+import YouTube from "./skeleton";
 const Featuredest = () => {
   const navigate = useNavigate();
   const { getToken } = useAuth();
@@ -23,7 +24,8 @@ const Featuredest = () => {
     },
   });
   if (isLoading) {
-    return <div>Loading...</div>;
+    return   <YouTube/>
+  
   }
 
   if (isError) {

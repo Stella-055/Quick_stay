@@ -8,6 +8,8 @@ import api from "../config/api";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import Starrating from "../Components/Starrating";
 import { useNavigate } from "react-router-dom";
+import React from "react";
+import YouTube from "../Components/skeleton";
 const Roomdetails = () => {
   const { id } = useParams();
   const [room, setRoom] = useState(null);
@@ -75,7 +77,7 @@ const checkavailability = useMutation({
 
 );
 if (isLoading) {
-  return <div>Loading...</div>;
+  return<YouTube/>;
 };
 
 if (isError) {

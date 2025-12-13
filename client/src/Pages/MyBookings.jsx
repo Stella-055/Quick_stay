@@ -4,6 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import api from "../config/api";
 import { useUser } from "@clerk/clerk-react";
 import { assets } from "../assets/assets";
+import React from "react";
+import YouTube from "../Components/skeleton";
 
 const MyBookings = () => {
   const [bookings, setBookings] = useState([]);
@@ -25,7 +27,7 @@ const MyBookings = () => {
     }
   }, [data]);
   if (!isLoaded || isLoading) {
-    return <div>Loading...</div>;
+    return <YouTube/>
   }
 
   if (isError) {

@@ -5,6 +5,8 @@ import Starrating from "../Components/Starrating";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import api from "../config/api";
+import React from "react";
+import YouTube from "../Components/skeleton";
 const Checkbox = ({ label, selected, onChange = () => {} }) => {
   return (
     <label className=" flex gap-3 items-center cursor-pointer mt-2 text-sm">
@@ -55,13 +57,7 @@ const AllRooms = () => {
       return response.data;
     },
   });
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (isError) {
-    return <div>{error.message}|| something went wrong</div>;
-  }
+  
   const [rooms, setrooms] = React.useState(data);
   if (city.get("city")) {
     React.useEffect(() => {
@@ -94,6 +90,13 @@ const AllRooms = () => {
     }
     setrooms(sortedRooms);
   };
+  if (isLoading) {
+    return <YouTube/>;
+  }
+
+  if (isError) {
+    return <div>{error.message}|| something went wrong</div>;
+  }
   return (
     <div className="flex flex-col-reverse lg:flex-row items-start justify-between pt-28 md:pt-35 px=4 md:px-16 lg:px-24">
       <div>
