@@ -3,17 +3,19 @@ import { useState } from "react";
 import Title from "../../Components/Title";
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer, toast,Bounce } from "react-toastify";
 import api from "../../config/api";
-import { useUser } from "@clerk/clerk-react";
-const ListRoom = () => {
+import { useUser} from "@clerk/clerk-react";
+const ListRoom =  () => {
   const [rooms, setRooms] = useState([]);
-  const { user } = useUser();
+  const { user } =  useUser();
+  
   const userDetails = { userId: user.id };
   const getRooms = useMutation({
     mutationKey: ["listRoom"],
     mutationFn: async (userDetails) => {
-      const response = await api.post(`/room`, userDetails);
+      const response = await api.post(`/rooms/owner`, userDetails);
+     
       return response.data;
     },
     onError: (error) => {
@@ -29,11 +31,11 @@ const ListRoom = () => {
   });
   React.useEffect(() => {
     getRooms.mutate(userDetails);
-  }, [user]);
+  }, [user.id]);
   const toggleAvailability = useMutation({
     mutationKey: ["toggleAvailability"],
     mutationFn: async ({ userId, roomId }) => {
-      const response = await api.patch(`/availability/${roomId}`, { userId });
+      const response = await api.patch(`/rooms/availability/${roomId}`, { userId });
       return response.data;
     },
     onError: (error) => {
@@ -91,7 +93,7 @@ const ListRoom = () => {
                   {item.roomType}
                 </td>
                 <td className="py-3 px-4 text-gray-700 border-gray-300 max-sm:hidden border-t">
-                  {item.amenities.join(",")}
+                {Object.keys(item.ammenities[0]).join(", ")}
                 </td>
                 <td className="py-3 px-4 text-gray-700border-gray-300 text-center">
                   ${item.pricePerNight}
