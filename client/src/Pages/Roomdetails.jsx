@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useUser } from "@clerk/clerk-react";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer, toast ,Bounce} from "react-toastify";
 import { useParams } from "react-router-dom";
 import { assets, facilityIcons, roomCommonData } from "../assets/assets";
 import axios from "axios";
@@ -11,9 +11,10 @@ import { useNavigate } from "react-router-dom";
 const Roomdetails = () => {
   const { id } = useParams();
   const [room, setRoom] = useState(null);
+  const [available, setAvailable] = useState(false);
   const navigate = useNavigate();
   const { user } = useUser();
-  const userId = user.id;
+ // const userId = user.id;
   const [mainImage, setMainImage] = useState(null);
   const [checkInDate, setCheckInDate] = useState("");
   const [checkOutDate, setCheckOutDate] = useState("");
@@ -23,25 +24,12 @@ const Roomdetails = () => {
     queryKey: ["featuredDestinations"],
     queryFn: async () => {
       const response = await api.get("/rooms");
+      console.log(response.data);
       return response.data;
     },
   });
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (isError) {
-    return <div>{error.message}|| something went wrong</div>;
-  }
-  if (data) {
-    const roomData = data.find((room) => room._id === id);
-    if (roomData && !room) {
-      setRoom(roomData);
-      setMainImage(roomData.images[0]);
-    }
-  }
-  const [available, setAvailable] = useState(false);
-  const checkavailability = useMutation({
+ 
+const checkavailability = useMutation({
     mutationKey: ["checkAvailability"],
     mutationFn: async (Details) => {
       const response = await api.post(`/bookings/check-availability`, Details);
@@ -80,7 +68,27 @@ const Roomdetails = () => {
     onSuccess: (data) => {
       navigate("/my-bookings");
     },
-  });
+  }
+
+
+
+
+);
+if (isLoading) {
+  return <div>Loading...</div>;
+};
+
+if (isError) {
+  return <div>{error.message}|| something went wrong</div>;
+};
+if (data) {
+  const roomData = data.rooms.find((room) => room._id === id);
+  if (roomData && !room) {
+    setRoom(roomData);
+    setMainImage(roomData.images[0]);
+  };
+};
+
   return (
     room && (
       <div className="py-28 md:py-35 px-4 md:px-16 lg:px-24 xl:px-32">
@@ -142,7 +150,11 @@ const Roomdetails = () => {
               Experience luxury like never before{" "}
             </h1>
             <div className="flex flex-wrap items-center mt-3 mb-6 gap-4">
-              {room.amenities.map((item, index) => (
+              {
+                Object.entries(room.ammenities[0])
+                .filter(([, v]) => v)
+                .map(([k]) => k)
+                .map((item, index) => (
                 <div
                   className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-100"
                   key={index}

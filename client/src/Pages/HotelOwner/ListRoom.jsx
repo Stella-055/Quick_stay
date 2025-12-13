@@ -93,7 +93,11 @@ const ListRoom =  () => {
                   {item.roomType}
                 </td>
                 <td className="py-3 px-4 text-gray-700 border-gray-300 max-sm:hidden border-t">
-                {Object.keys(item.ammenities[0]).join(", ")}
+                {Object.entries(item.ammenities[0])
+  .filter(([_, value]) => value === true)
+  .map(([key]) => key)
+  .join(", ")}
+
                 </td>
                 <td className="py-3 px-4 text-gray-700border-gray-300 text-center">
                   ${item.pricePerNight}
