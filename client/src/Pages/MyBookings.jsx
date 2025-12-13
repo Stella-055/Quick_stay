@@ -7,25 +7,30 @@ import { assets } from "../assets/assets";
 
 const MyBookings = () => {
   const [bookings, setBookings] = useState([]);
-  const { user } = useUser();
-  const userId = user.id;
+
+ 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["my bookings"],
     queryFn: async () => {
-      const response = await api.get(`/booking/user/${userId}`);
+      const { user } =  await useUser();
+      const  userId =  user.id
+      const response = await api.get(`/bookings/user/${userId}`);
+      console.log(response.data);
       return response.data;
     },
   });
+ 
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
   if (isError) {
-    return <div>{error.message}|| something went wrong</div>;
+    console.error(error);
+    return <div>{error.message}</div>;
   }
   React.useEffect(() => {
     if (data) {
-      setBookings(data);
+      setBookings(data.bookings);
     }
   }, [data]);
   return (

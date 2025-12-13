@@ -169,6 +169,7 @@ export const getHotelBookings = async (req: Request, res: Response) => {
       `Total Bookings: ${totalBookings}, Total Revenue: ${totalRevenue}`,
     );
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: "Internal server error" });
   }
 };

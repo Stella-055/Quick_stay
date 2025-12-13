@@ -14,7 +14,7 @@ const Roomdetails = () => {
   const [available, setAvailable] = useState(false);
   const navigate = useNavigate();
   const { user } = useUser();
- // const userId = user.id;
+ const userId = user.id;
   const [mainImage, setMainImage] = useState(null);
   const [checkInDate, setCheckInDate] = useState("");
   const [checkOutDate, setCheckOutDate] = useState("");
