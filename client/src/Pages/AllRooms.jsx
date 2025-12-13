@@ -5,7 +5,7 @@ import Starrating from "../Components/Starrating";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import api from "../config/api";
-import React from "react";
+
 import YouTube from "../Components/skeleton";
 const Checkbox = ({ label, selected, onChange = () => {} }) => {
   return (
