@@ -8,19 +8,23 @@ import { assets } from "../assets/assets";
 const MyBookings = () => {
   const [bookings, setBookings] = useState([]);
 
- 
+  const { user, isLoaded } = useUser();
+  const userId = user?.id;
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["my bookings"],
+    queryKey: ["my bookings", userId],
+    enabled: !!userId,
     queryFn: async () => {
-      const { user } =  await useUser();
-      const  userId =  user.id
       const response = await api.get(`/bookings/user/${userId}`);
       console.log(response.data);
       return response.data;
     },
   });
- 
-  if (isLoading) {
+  React.useEffect(() => {
+    if (data) {
+      setBookings(data.bookings);
+    }
+  }, [data]);
+  if (!isLoaded || isLoading) {
     return <div>Loading...</div>;
   }
 
@@ -28,11 +32,7 @@ const MyBookings = () => {
     console.error(error);
     return <div>{error.message}</div>;
   }
-  React.useEffect(() => {
-    if (data) {
-      setBookings(data.bookings);
-    }
-  }, [data]);
+ 
   return (
     <div className="py-28 md:pb-35 md:pt-32 px-4 md:px-16 lg:px-24 xl:px-32">
       <Title
