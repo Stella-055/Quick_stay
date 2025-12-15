@@ -5,7 +5,7 @@ import Starrating from "../Components/Starrating";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import api from "../config/api";
-
+import Alert from '@mui/material/Alert';
 import YouTube from "../Components/skeleton";
 const Checkbox = ({ label, selected, onChange = () => {} }) => {
   return (
@@ -93,11 +93,13 @@ const AllRooms = () => {
     setrooms(sortedRooms);
   };
   if (isLoading) {
-    return <YouTube/>;
+    return<div className="pt-12" > <YouTube/></div> ;
   }
 
   if (isError) {
-    return <div>{error.message}|| something went wrong</div>;
+    return <div className=" pt-40 flex  items-center justify-center  w-full h-40">
+         <Alert severity="error">Something went wrong while fetching the hotels.</Alert>
+        </div> ;
   }
   return (
     <div className="flex flex-col-reverse lg:flex-row items-start justify-between pt-28 md:pt-35 px=4 md:px-16 lg:px-24">

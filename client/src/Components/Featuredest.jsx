@@ -7,6 +7,8 @@ import api from "../config/api";
 import { useAuth } from "@clerk/clerk-react";
 import { useQuery } from "@tanstack/react-query";
 import YouTube from "./skeleton";
+import Alert from '@mui/material/Alert';
+
 const Featuredest = () => {
   const navigate = useNavigate();
   const { getToken } = useAuth();
@@ -29,17 +31,9 @@ const Featuredest = () => {
   }
 
   if (isError) {
-    return toast.error(error, {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: false,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-      transition: Bounce,
-    });
+    return <div className="flex  items-center justify-center  w-full h-40">
+     <Alert severity="error">Something went wrong while fetching the hotels.</Alert>
+    </div>
   }
   return (
     <div className="flex flex-col items-center justify-center px-6 md:px-16 lg:px-24  bg-slate-50 pb-10 pt-20">
