@@ -18,7 +18,7 @@ app.use(clerkMiddleware());
 
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://qshotel.netlify.app/"],
+    origin: ["http://localhost:5173", "https://qshotel.netlify.app"],
     credentials: true,
   }),
 );
